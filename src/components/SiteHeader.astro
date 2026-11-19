@@ -1,5 +1,4 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
 import { PROFILE } from '../data/profile';
 
 interface Props {
@@ -68,8 +67,6 @@ const prefix = active === 'home' ? '' : '/';
         <span class="hidden md:inline text-xs uppercase tracking-wider">Index</span>
         <kbd class="hidden md:inline text-xs text-[var(--fg)]">⌘K</kbd>
       </button>
-
-      <ThemeToggle />
     </div>
   </div>
 </header>

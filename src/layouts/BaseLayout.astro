@@ -55,8 +55,7 @@ const personJsonLd = {
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="application/rss+xml" title={`${PROFILE.name} — Writing`} href={rssUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#fdfaf5" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1b1917" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fdfaf5" />
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content={ogType} />
@@ -75,23 +74,6 @@ const personJsonLd = {
 
     <!-- Structured Data -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
-
-    <!-- Zero-FOUC theme initialization -->
-    <script is:inline>
-      (() => {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
-            document.documentElement.classList.add('dark');
-          }
-        } catch {
-          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-          }
-        }
-      })();
-    </script>
   </head>
   <body class="min-h-screen flex flex-col paper-grain">
     <a href="#main-content" class="skip-link">Skip to main content</a>

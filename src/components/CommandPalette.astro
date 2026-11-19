@@ -109,11 +109,6 @@ import { PROFILE } from '../data/profile';
       hint: 'Clipboard',
       action: () => copyEmailReliable(),
     },
-    {
-      label: 'Toggle Light / Dark Theme',
-      hint: 'Theme',
-      action: () => document.getElementById('themeToggleBtn')?.click(),
-    },
     { label: 'GitHub (@ayush987goyal)', hint: 'External ↗', action: () => window.open(profile.links.github, '_blank', 'noopener') },
     { label: 'LinkedIn', hint: 'External ↗', action: () => window.open(profile.links.linkedin, '_blank', 'noopener') },
     { label: `WCA Profile (${profile.wcaId})`, hint: 'External ↗', action: () => window.open(profile.links.wca, '_blank', 'noopener') },

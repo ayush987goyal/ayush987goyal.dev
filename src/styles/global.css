@@ -7,7 +7,7 @@
 }
 
 :root {
-  /* Warm Literary Paper (Light Mode) */
+  /* Warm Literary Paper */
   --bg: #fdfaf5;
   --surface: #f6f1e7;
   --surface-hover: #efe8dc;
@@ -33,33 +33,6 @@
   --chapter-rule: #443e38;
 }
 
-html.dark {
-  /* Warm Charcoal Paper (Dark Mode) — distinct from deeper recessed Work band */
-  --bg: #1b1917;
-  --surface: #24211e;
-  --surface-hover: #2d2925;
-  --border: #3a342e;
-  --border-strong: #534c43;
-  --border-dotted: #534c43;
-  --fg: #f6f1e9;
-  --fg-muted: #d1c8bc;
-  --fg-subtle: #b2a99d;
-  --accent: #e5b072;
-  --accent-soft: #f2c792;
-  --mark: rgba(229, 176, 114, 0.22);
-  --selection-bg: #e5b072;
-  --selection-fg: #141210;
-
-  /* Deep Recessed Espresso-Ink Band in Dark Mode (preserves 3-act chapter rhythm) */
-  --chapter-bg: #0e0d0c;
-  --chapter-surface: #171513;
-  --chapter-fg: #faf6ef;
-  --chapter-muted: #c4bab0;
-  --chapter-subtle: #a99f92;
-  --chapter-accent: #e5b072;
-  --chapter-rule: #413b34;
-}
-
 @layer base {
   html {
     background-color: var(--bg);
@@ -71,10 +44,6 @@ html.dark {
     -moz-osx-font-smoothing: grayscale;
     color-scheme: light;
     overflow-x: clip;
-  }
-
-  html.dark {
-    color-scheme: dark;
   }
 
   body {
@@ -138,10 +107,6 @@ html.dark {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-html.dark .paper-grain::after {
-  opacity: 0.032;
-}
-
 /* Print-inspired dotted newspaper rules */
 .rule-dotted-b {
   border-bottom: 1px dotted var(--border-dotted);
@@ -157,11 +122,6 @@ html.dark .paper-grain::after {
 
 .rule-chapter-t {
   border-top: 1px dotted var(--chapter-rule);
-}
-
-html.dark .chapter-band {
-  border-top: 1px solid rgba(255, 245, 230, 0.1);
-  border-bottom: 1px solid rgba(255, 245, 230, 0.1);
 }
 
 @media (max-width: 767px) {
@@ -182,16 +142,10 @@ html.dark .chapter-band {
   }
 }
 
-/* Subtle editorial butter highlighter swipe (light) / crisp gold underline (dark) */
+/* Subtle editorial butter highlighter swipe */
 .editorial-mark {
   background: linear-gradient(180deg, transparent 54%, var(--mark) 54%, var(--mark) 92%, transparent 92%);
   padding: 0 3px;
-}
-
-html.dark .editorial-mark {
-  background: none;
-  padding: 0 1px;
-  border-bottom: 1.5px solid var(--accent);
 }
 
 /* Crisp editorial link underline */
