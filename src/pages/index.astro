@@ -1,16 +1,550 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import WcaSection from '../components/WcaSection.astro';
+import { EDUCATION, EXPERIENCE, LEAD_OSS, LIVE_APPS, PROFILE } from '../data/profile';
+import { getWcaProfile } from '../lib/wca';
+
+const wca = await getWcaProfile(PROFILE.wcaId);
+const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <!-- Sticky Editorial Masthead -->
+  <header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/90 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto px-5 sm:px-10 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <a
+          href="#top"
+          class="font-editorial text-[18px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors truncate"
+        >
+          {PROFILE.domain}
+        </a>
+        <span class="hidden lg:inline text-[var(--border-strong)]">·</span>
+        <span id="blrClock" class="hidden lg:inline font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">
+          BLR · IST
+        </span>
+      </div>
+
+      <nav aria-label="Primary" class="hidden md:flex items-center gap-6 text-xs font-mono uppercase tracking-[0.12em] text-[var(--fg-subtle)]">
+        <a href="#experience" class="hover:text-[var(--fg)] transition-colors">Career</a>
+        <a href="#work" class="hover:text-[var(--fg)] transition-colors">Work</a>
+        <a href="#cubing" class="hover:text-[var(--fg)] transition-colors">Cubing</a>
+        {
+          publishedPosts.length > 0 && (
+            <a href="/writing" class="hover:text-[var(--fg)] transition-colors">
+              Writing
+            </a>
+          )
+        }
+        <a href="#contact" class="hover:text-[var(--fg)] transition-colors">Colophon</a>
+      </nav>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          id="openCmdBtn"
+          type="button"
+          aria-label="Open quick navigation"
+          class="inline-flex items-center gap-2 h-9 px-3 text-xs font-mono text-[var(--fg-muted)] bg-[var(--surface)]/70 border border-[var(--border)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
+        >
+          <span class="hidden sm:inline text-[11px] uppercase tracking-wider">Index</span>
+          <kbd class="text-[11px] text-[var(--fg)]">⌘K</kbd>
+        </button>
+        <ThemeToggle />
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="flex-1">
+    <!-- =================================================================== -->
+    <!-- CHAPTER I: WARM LITERARY PAPER HERO + CAREER DISPATCH               -->
+    <!-- =================================================================== -->
+    <div class="max-w-5xl mx-auto px-5 sm:px-10 pt-10 sm:pt-16 pb-14 sm:pb-16 space-y-12">
+      <!-- Editorial Hero Spread -->
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-end">
+        <div class="md:col-span-9 space-y-6">
+          <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">
+            {PROFILE.role} · {PROFILE.location}
+          </p>
+
+          <h1 class="font-editorial font-normal text-[40px] sm:text-[56px] lg:text-[64px] leading-[1.0] tracking-[-0.032em] text-[var(--fg)]">
+            Building <em class="italic">resilient</em> software,{' '}<br class="hidden sm:inline" />from cloud engines to{' '}<br class="hidden sm:inline" />human interfaces.
+          </h1>
+
+          <p class="text-[16px] sm:text-[17px] leading-[1.64] text-[var(--fg-muted)] max-w-[60ch]">
+            I'm <strong class="font-medium text-[var(--fg)]">{PROFILE.name}</strong>, a Staff Software Engineer at
+            <strong class="font-medium text-[var(--fg)]"> Google</strong>. Over the past
+            <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — spanning seven years at Amazon (AWS Bedrock, AI Computer Vision, Pharmacy), Goldman Sachs, and Citi — I've focused on turning complex infrastructure into calm, enduring software.
+          </p>
+
+          <!-- Hairline Underlined Action Links (Zero Pill Clutter) -->
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3 pt-1 text-[14px]">
+            <button
+              id="copyEmailBtn"
+              type="button"
+              data-email={PROFILE.email}
+              class="inline-flex items-baseline gap-2 py-1 text-[var(--fg)] font-medium underline decoration-[var(--accent)] underline-offset-4 decoration-1 hover:text-[var(--accent)] transition-colors cursor-pointer"
+            >
+              <span id="copyEmailLabel">{PROFILE.email}</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)] no-underline">copy</span>
+            </button>
+            <a href={PROFILE.links.github} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+              GitHub ↗
+            </a>
+            <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+              LinkedIn ↗
+            </a>
+            <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+              WCA {PROFILE.wcaId} ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Editorial Portrait Stamp -->
+        <div class="md:col-span-3 flex md:flex-col items-center md:items-end justify-start md:justify-between gap-5">
+          <figure class="p-1.5 border border-[var(--border-strong)] bg-[var(--surface)] shrink-0">
+            <div class="w-24 h-24 sm:w-28 sm:h-28 overflow-hidden bg-[var(--chapter-bg)] relative">
+              <img
+                src="/avatar.jpg"
+                alt={PROFILE.name}
+                width="112"
+                height="112"
+                loading="eager"
+                class="w-full h-full object-cover object-[44%_14%] scale-[1.55] origin-[44%_14%] portrait-stamp"
+              />
+            </div>
+            <figcaption class="mt-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-center text-[var(--fg-subtle)]">
+              {PROFILE.coordinates}
+            </figcaption>
+          </figure>
+
+          <div class="text-left md:text-right font-mono text-[11px] text-[var(--fg-subtle)] leading-relaxed">
+            <div class="text-[var(--fg)]">Vol. IV · 2026</div>
+            <div>IIT Roorkee · 10 WCA Medals</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hand-drawn Editorial Squiggle Divider -->
+      <div class="flex items-center gap-4 text-[var(--accent)]/75 pt-2">
+        <svg width="108" height="10" viewBox="0 0 108 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="shrink-0">
+          <path
+            d="M1 5.5C9 1.5 16 9.5 24 5.5C32 1.5 39 9.5 47 5.5C55 1.5 62 9.5 70 5.5C78 1.5 85 9.5 93 5.5C100 2 104 7 107 5"
+            stroke="currentColor"
+            stroke-width="1.25"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
+          Career Dispatch · 2012–2026
+        </span>
+      </div>
+
+      <!-- 3-Column Print-Style Career Strip + Expandable Full Ledger -->
+      <section id="experience" class="space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-0">
+          <article class="space-y-2 md:pr-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile">
+            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--accent)]">
+              Now · Jul 2026 –
+            </div>
+            <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">Google</h2>
+            <p class="text-[14px] leading-[1.6] text-[var(--fg-muted)]">
+              <strong class="font-medium text-[var(--fg)]">Staff Software Engineer.</strong> Full-stack architecture and technical leadership out of Bengaluru.
+            </p>
+          </article>
+
+          <article class="space-y-2 md:px-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile">
+            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--fg-subtle)]">
+              7 Years · 2019 – 2026
+            </div>
+            <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">Amazon &amp; AWS</h2>
+            <p class="text-[14px] leading-[1.6] text-[var(--fg-muted)]">
+              Senior SDE at <strong class="font-medium text-[var(--fg)]">Pharmacy</strong>; Senior FEE on
+              <strong class="font-medium text-[var(--fg)]"> AWS Bedrock</strong> &amp;
+              <strong class="font-medium text-[var(--fg)]"> AI Computer Vision</strong> (2023 re:Invent Award); early AWS CDK pioneer.
+            </p>
+          </article>
+
+          <article class="space-y-2 md:pl-7">
+            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--fg-subtle)]">
+              Foundations · 2012 – 2019
+            </div>
+            <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">GS · Citi · IITR</h2>
+            <p class="text-[14px] leading-[1.6] text-[var(--fg-muted)]">
+              Trade-compliance lead at <strong class="font-medium text-[var(--fg)]">Goldman Sachs</strong>, core C++ equities pricing at
+              <strong class="font-medium text-[var(--fg)]"> Citi</strong>, and ChemE honors at
+              <strong class="font-medium text-[var(--fg)]"> IIT Roorkee</strong>.
+            </p>
+          </article>
+        </div>
+
+        <!-- Expandable Full Role Ledger (Zero visual clutter at rest; complete detail on demand) -->
+        <details class="group rule-dotted-t pt-5">
+          <summary class="inline-flex items-center gap-2 py-1 font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors cursor-pointer select-none">
+            <span class="underline decoration-[var(--border-strong)] underline-offset-4 group-hover:decoration-[var(--accent)]">
+              Read full role history &amp; research (2012–2026)
+            </span>
+            <span class="inline-block transition-transform duration-200 group-open:rotate-180" aria-hidden="true">↓</span>
+          </summary>
+
+          <div class="mt-6 divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
+            {
+              EXPERIENCE.map((item) => (
+                <div class="py-5 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
+                  <div class="md:col-span-3 space-y-0.5">
+                    <div class="font-mono text-[11px] text-[var(--fg-subtle)]">{item.period}</div>
+                    <div class="font-mono text-[11px] text-[var(--fg-subtle)]/80">{item.location}</div>
+                  </div>
+                  <div class="md:col-span-9 space-y-2.5">
+                    <div class="flex flex-wrap items-baseline gap-x-2">
+                      <h3 class="font-editorial text-xl text-[var(--fg)]">{item.company}</h3>
+                      <span class="font-editorial italic text-[15px] text-[var(--fg-subtle)]">— {item.headlineRole}</span>
+                    </div>
+                    {item.summary && (
+                      <p class="text-[13.5px] leading-relaxed text-[var(--fg-muted)]">{item.summary}</p>
+                    )}
+                    {item.roles && (
+                      <div class="pt-1 space-y-3 border-l border-dotted border-[var(--border-dotted)] pl-4">
+                        {item.roles.map((r) => (
+                          <div class="space-y-0.5">
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-[13px]">
+                              <div>
+                                <span class="font-medium text-[var(--fg)]">{r.team}</span>
+                                <span class="text-[var(--fg-subtle)]"> · {r.title}</span>
+                              </div>
+                              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{r.period}</span>
+                            </div>
+                            {r.summary && (
+                              <p class="text-[13px] leading-relaxed text-[var(--fg-muted)]">{r.summary}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            }
+
+            <!-- Education & Research -->
+            <div class="py-5 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
+              <div class="md:col-span-3 space-y-0.5">
+                <div class="font-mono text-[11px] text-[var(--fg-subtle)]">{EDUCATION.period}</div>
+                <div class="font-mono text-[11px] text-[var(--fg-subtle)]/80">Roorkee · Windsor · Pune</div>
+              </div>
+              <div class="md:col-span-9 space-y-1.5">
+                <div class="flex flex-wrap items-baseline gap-x-2">
+                  <h3 class="font-editorial text-xl text-[var(--fg)]">{EDUCATION.institution}</h3>
+                  <span class="font-editorial italic text-[15px] text-[var(--fg-subtle)]">— {EDUCATION.degree}</span>
+                </div>
+                <p class="text-[13.5px] leading-relaxed text-[var(--fg-muted)]">{EDUCATION.highlights}</p>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- CHAPTER II: DEEP ESPRESSO EDITORIAL CHAPTER (Every.to contrast flip)-->
+    <!-- =================================================================== -->
+    <section
+      id="work"
+      class="bg-[var(--chapter-bg)] text-[var(--chapter-fg)] rule-chapter-t rule-chapter-b"
+    >
+      <div class="max-w-5xl mx-auto px-5 sm:px-10 py-14 sm:py-16 space-y-8">
+        <!-- Chapter Masthead & Editorial Filter Tabs -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 rule-chapter-b pb-5">
+          <div class="space-y-1.5">
+            <div class="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--chapter-accent)]">
+              Index · Open Source &amp; Weekend Builds
+            </div>
+            <h2 class="font-editorial font-normal text-3xl sm:text-[42px] leading-[1.05] tracking-[-0.025em] text-[var(--chapter-fg)]">
+              Things shipped in the <em class="italic text-[var(--chapter-accent)]">open</em>.
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-5 text-xs font-mono">
+            <button
+              type="button"
+              data-work-tab="all"
+              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer"
+            >
+              All
+            </button>
+            <button
+              type="button"
+              data-work-tab="oss"
+              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
+            >
+              Open Source
+            </button>
+            <button
+              type="button"
+              data-work-tab="app"
+              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
+            >
+              Live Apps
+            </button>
+          </div>
+        </div>
+
+        <!-- Asymmetric Newspaper Dotted Grid -->
+        <div id="workNewspaper" class="grid grid-cols-1 md:grid-cols-12 gap-0 rule-chapter-b">
+          <!-- Lead Feature: AWS CDK & Construct Hub -->
+          <article
+            id="workOssCol"
+            data-work-kind="oss"
+            class="md:col-span-7 py-6 md:pr-9 rule-chapter-r-md rule-chapter-b-mobile space-y-5"
+          >
+            <div class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--chapter-accent)]">
+              {LEAD_OSS.eyebrow}
+            </div>
+
+            <h3 class="font-editorial font-normal text-3xl sm:text-[34px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
+              {LEAD_OSS.title} <em class="italic text-[#d8cfc2]">{LEAD_OSS.titleAccent}</em> {LEAD_OSS.titleTail}
+            </h3>
+
+            <p class="text-[14.5px] leading-[1.68] text-[var(--chapter-muted)]">
+              {LEAD_OSS.description}
+            </p>
+
+            <!-- Quiet Code Specimen -->
+            <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-[11.5px] leading-relaxed text-[#d6cfc3] overflow-x-auto"><code><span class="text-[#948a7e]">// aws/aws-cdk PR #12436 · StepFunctions</span>
+<span class="text-[var(--chapter-accent)]">new</span> tasks.EcsRunTask(this, <span class="text-[#d4a373]">'RunJob'</span>, &#123;
+  taskDefinition,
+  revisionNumber: <span class="text-[#e8c584]">Revision.LATEST</span>,
+&#125;);</code></pre>
+
+            <!-- Direct Editorial Links -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-1 font-mono text-xs">
+              {
+                LEAD_OSS.links.map((item) => (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-flex items-center justify-between gap-2 py-1 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
+                  >
+                    <span class="truncate">{item.label}</span>
+                    <span class="shrink-0">↗</span>
+                  </a>
+                ))
+              }
+            </div>
+          </article>
+
+          <!-- Secondary Dispatch Column: Live Weekend Web Apps -->
+          <div
+            id="workAppCol"
+            data-work-kind="app"
+            class="md:col-span-5 md:pl-9 divide-y divide-dotted divide-[var(--chapter-rule)] flex flex-col justify-between"
+          >
+            {
+              LIVE_APPS.map((app) => (
+                <article class="py-6 first:pt-6 last:pb-6 space-y-2 group">
+                  <div class="flex items-baseline justify-between gap-3">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--chapter-subtle)]">
+                      {app.badge}
+                    </span>
+                    <div class="flex items-center gap-3 font-mono text-[11px]">
+                      {app.repoUrl && (
+                        <a
+                          href={app.repoUrl}
+                          target="_blank"
+                          rel="noopener"
+                          class="text-[var(--chapter-subtle)] hover:text-[var(--chapter-fg)] transition-colors"
+                        >
+                          Source
+                        </a>
+                      )}
+                      <a
+                        href={app.url}
+                        target="_blank"
+                        rel="noopener"
+                        class="text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
+                      >
+                        Open ↗
+                      </a>
+                    </div>
+                  </div>
+
+                  <h3 class="font-editorial font-normal text-[22px] leading-snug text-[var(--chapter-fg)]">
+                    <a
+                      href={app.url}
+                      target="_blank"
+                      rel="noopener"
+                      class="hover:text-[var(--chapter-accent)] transition-colors"
+                    >
+                      {app.title}
+                    </a>
+                  </h3>
+
+                  <p class="text-[13.5px] leading-[1.6] text-[var(--chapter-muted)]">
+                    {app.description}
+                  </p>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- CHAPTER III: SPEEDCUBING SPECIMEN SHEET (Back to Warm Paper)        -->
+    <!-- =================================================================== -->
+    <WcaSection wca={wca} />
+
+    <!-- Optional Writing Preview (auto-renders once non-draft posts exist) -->
+    {
+      publishedPosts.length > 0 && (
+        <section id="writing" class="max-w-5xl mx-auto px-5 sm:px-10 pb-14 space-y-5">
+          <div class="flex items-baseline justify-between rule-dotted-b pb-3">
+            <h2 class="font-editorial font-normal text-3xl text-[var(--fg)]">Notes &amp; Essays</h2>
+            <a href="/writing" class="font-mono text-xs text-[var(--accent)] hover:underline underline-offset-4">
+              All notes ↗
+            </a>
+          </div>
+          <ul class="divide-y divide-dotted divide-[var(--border-dotted)]">
+            {publishedPosts.slice(0, 4).map((post) => (
+              <li class="py-3.5 first:pt-0">
+                <a
+                  href={`/writing/${post.id}`}
+                  class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 group"
+                >
+                  <span class="font-editorial text-xl text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                    {post.data.title}
+                  </span>
+                  <time
+                    datetime={post.data.publishedAt.toISOString()}
+                    class="font-mono text-xs text-[var(--fg-subtle)] shrink-0"
+                  >
+                    {post.data.publishedAt.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </time>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- EDITORIAL COLOPHON FOOTER                                           -->
+  <!-- =================================================================== -->
+  <footer id="contact" class="max-w-5xl w-full mx-auto px-5 sm:px-10 pb-10">
+    <div class="rule-dotted-t pt-8 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+        <div class="space-y-1">
+          <div class="font-editorial text-xl text-[var(--fg)]">{PROFILE.name}</div>
+          <p class="font-mono text-[11px] text-[var(--fg-subtle)]">
+            Colophon — Set in Newsreader, Inter &amp; JetBrains Mono · Built with Astro · {PROFILE.location}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[var(--fg-muted)]">
+          <a href={`mailto:${PROFILE.email}`} class="editorial-link text-[var(--fg)]">
+            {PROFILE.email}
+          </a>
+          <a href={PROFILE.links.github} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
+            GitHub
+          </a>
+          <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
+            LinkedIn
+          </a>
+          <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
+            WCA
+          </a>
+          <a href="/rss.xml" class="hover:text-[var(--accent)] transition-colors">
+            RSS
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <CommandPalette />
+</BaseLayout>
+
+<script>
+  // Live Bengaluru IST clock in masthead
+  const clockEl = document.getElementById('blrClock');
+  function updateBlrClock() {
+    if (!clockEl) return;
+    try {
+      const formatted = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }).format(new Date());
+      clockEl.textContent = `BLR · ${formatted} IST`;
+    } catch {
+      // Fallback stays static
+    }
+  }
+  updateBlrClock();
+  setInterval(updateBlrClock, 30000);
+
+  // Copy email button
+  const copyBtn = document.getElementById('copyEmailBtn') as HTMLButtonElement | null;
+  const copyLabel = document.getElementById('copyEmailLabel');
+
+  copyBtn?.addEventListener('click', async () => {
+    const email = copyBtn.dataset.email ?? 'hi@ayush987goyal.dev';
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch {
+      // Clipboard fallback ignored gracefully
+    }
+    if (copyLabel) {
+      copyLabel.textContent = `Copied ${email} ✓`;
+      setTimeout(() => {
+        copyLabel.textContent = email;
+      }, 2000);
+    }
+  });
+
+  // Work section editorial filter tabs
+  const workTabs = document.querySelectorAll<HTMLButtonElement>('.work-tab');
+  const ossCol = document.getElementById('workOssCol');
+  const appCol = document.getElementById('workAppCol');
+
+  workTabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.workTab;
+      workTabs.forEach((b) => {
+        b.className =
+          'work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer';
+      });
+      btn.className =
+        'work-tab py-1.5 min-h-[36px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer';
+
+      if (ossCol && appCol) {
+        const showOss = target === 'all' || target === 'oss';
+        const showApp = target === 'all' || target === 'app';
+        ossCol.classList.toggle('hidden', !showOss);
+        appCol.classList.toggle('hidden', !showApp);
+
+        // Expand active single column cleanly when filtered
+        ossCol.classList.toggle('md:col-span-12', target === 'oss');
+        ossCol.classList.toggle('md:col-span-7', target !== 'oss');
+        ossCol.classList.toggle('md:border-r-0', target === 'oss');
+        appCol.classList.toggle('md:col-span-12', target === 'app');
+        appCol.classList.toggle('md:col-span-5', target !== 'app');
+        appCol.classList.toggle('md:pl-0', target === 'app');
+        appCol.classList.toggle('md:pl-9', target !== 'app');
+      }
+    });
+  });
+</script>

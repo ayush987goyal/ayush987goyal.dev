@@ -1,0 +1,231 @@
+---
+import type { WcaSummary } from '../lib/wca';
+import RubiksCube from './RubiksCube.astro';
+
+interface Props {
+  wca: WcaSummary;
+}
+
+const { wca } = Astro.props;
+
+const byId = new Map(wca.events.map((e) => [e.id, e]));
+const fmc = byId.get('333fm');
+const bld = byId.get('333bf');
+const cube333 = byId.get('333');
+const cube222 = byId.get('222');
+const cube444 = byId.get('444');
+---
+
+<section id="cubing" class="max-w-5xl mx-auto px-5 sm:px-10 py-14 sm:py-16 space-y-10">
+  <!-- Specimen Header + Frameless 3D Cube -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    <div class="md:col-span-8 space-y-3">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">
+        <span>Off the Clock</span>
+        <span class="text-[var(--fg-subtle)]">·</span>
+        <a
+          href={wca.profileUrl}
+          target="_blank"
+          rel="noopener"
+          class="underline decoration-[var(--border-strong)] underline-offset-4 hover:decoration-[var(--accent)] transition-colors"
+        >
+          WCA {wca.wcaId} ↗
+        </a>
+      </div>
+
+      <h2 class="font-editorial font-normal text-3xl sm:text-[42px] leading-[1.06] tracking-[-0.025em] text-[var(--fg)]">
+        Ten official medals across <em class="italic">fourteen</em> events.
+      </h2>
+
+      <p class="text-[15px] leading-[1.65] text-[var(--fg-muted)] max-w-2xl">
+        {wca.medals.silver} Silver and {wca.medals.bronze} Bronze across {wca.competitionCount} World Cube Association competitions — highlighted by
+        <strong class="font-medium text-[var(--fg)]"> {fmc?.single ?? '38 moves'}</strong> in 3×3 Fewest Moves (#{fmc?.singleCountryRank?.toLocaleString() ?? '183'} India),
+        <strong class="font-medium text-[var(--fg)]"> {bld?.single ?? '2:24.70'}</strong> Blindfolded (#{bld?.singleCountryRank?.toLocaleString() ?? '201'} India), and a
+        <strong class="font-medium text-[var(--fg)]"> {cube333?.single ?? '10.86s'}</strong> 3×3 single.
+      </p>
+    </div>
+
+    <!-- Frameless 3D Cube + Live Sync Readout -->
+    <div class="md:col-span-4 flex items-center justify-start md:justify-end gap-5">
+      <RubiksCube />
+      <div class="font-mono text-[11px] text-[var(--fg-subtle)] space-y-1.5 border-l border-dotted border-[var(--border-dotted)] pl-4">
+        <div class="text-[var(--fg)] font-medium">Official WCA Sync</div>
+        <div>3×3 · <span class="text-[var(--fg)]">{cube333?.single ?? '10.86s'}</span></div>
+        <div>FMC · <span class="text-[var(--fg)]">{fmc?.single ?? '38 moves'}</span></div>
+        <div>3BLD · <span class="text-[var(--fg)]">{bld?.single ?? '2:24.70'}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editorial Dotted Ledger Strip -->
+  <div class="rule-dotted-t rule-dotted-b py-6 grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-6">
+    <div class="space-y-1">
+      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">WCA Medals</div>
+      <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">{wca.medals.total}</div>
+      <div class="text-xs text-[var(--fg-muted)]">
+        {wca.medals.gold > 0 ? `${wca.medals.gold}G · ` : ''}{wca.medals.silver} Silver · {wca.medals.bronze} Bronze
+      </div>
+    </div>
+
+    <div class="space-y-1">
+      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">Competitions</div>
+      <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">{wca.competitionCount}</div>
+      <div class="text-xs text-[var(--fg-muted)]">{wca.events.length} Official Events</div>
+    </div>
+
+    <div class="space-y-1">
+      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">3×3 Fewest Moves</div>
+      <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">
+        {fmc ? fmc.single.replace(' moves', '') : '38'}<span class="text-lg italic text-[var(--fg-subtle)] ml-1">moves</span>
+      </div>
+      <div class="text-xs text-[var(--accent)] font-mono">
+        India #{fmc?.singleCountryRank?.toLocaleString() ?? '183'}
+      </div>
+    </div>
+
+    <div class="space-y-1">
+      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">3×3 Blindfolded</div>
+      <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">
+        {bld?.single ?? '2:24.70'}
+      </div>
+      <div class="text-xs text-[var(--fg-muted)]">
+        India #{bld?.singleCountryRank?.toLocaleString() ?? '201'} · NCR ’14 Silver
+      </div>
+    </div>
+  </div>
+
+  <!-- Highlights / All Events Editorial Toggle -->
+  <div class="space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-5 text-xs font-mono">
+        <button
+          type="button"
+          data-wca-tab="highlights"
+          class="wca-tab py-1.5 min-h-[36px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer"
+        >
+          Selected PBs
+        </button>
+        <button
+          type="button"
+          data-wca-tab="all"
+          class="wca-tab py-1.5 min-h-[36px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer"
+        >
+          All {wca.events.length} Events
+        </button>
+      </div>
+      <span class="font-mono text-[11px] text-[var(--fg-subtle)]">
+        Synced from WCA API
+      </span>
+    </div>
+
+    <!-- Selected PBs (3-column editorial strip, zero boxy cards) -->
+    <div id="wcaPanelHighlights" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {
+        cube333 && (
+          <div class="md:pr-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">3×3×3 Cube</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube333.average} avg</span>
+            </div>
+            <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube333.single}</div>
+            <div class="text-xs text-[var(--fg-muted)]">Official competition single PB</div>
+          </div>
+        )
+      }
+
+      {
+        cube222 && (
+          <div class="md:pr-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">2×2×2 Cube</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube222.average} avg</span>
+            </div>
+            <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube222.single}</div>
+            <div class="text-xs text-[var(--accent)] font-mono">
+              India #{cube222.singleCountryRank?.toLocaleString()} single
+            </div>
+          </div>
+        )
+      }
+
+      {
+        cube444 && (
+          <div class="space-y-1">
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">4×4×4 Cube</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube444.average} avg</span>
+            </div>
+            <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube444.single}</div>
+            <div class="text-xs text-[var(--accent)] font-mono">Cerulean ’17 Silver</div>
+          </div>
+        )
+      }
+    </div>
+
+    <!-- All 14 Events Editorial Table (Zero horizontal overflow on 390px mobile!) -->
+    <div id="wcaPanelAll" class="hidden rule-dotted-t rule-dotted-b">
+      <table class="w-full text-left text-xs">
+        <thead class="border-b border-dotted border-[var(--border-dotted)] text-[var(--fg-subtle)] font-mono text-[10.5px] uppercase tracking-wider">
+          <tr>
+            <th class="py-3 pr-2 font-medium">Event</th>
+            <th class="py-3 px-2 font-medium text-right sm:text-left">Single</th>
+            <th class="hidden sm:table-cell py-3 px-2 font-medium">India</th>
+            <th class="py-3 pl-2 font-medium text-right sm:text-left">Average</th>
+            <th class="hidden sm:table-cell py-3 pl-2 font-medium text-right">India</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-dotted divide-[var(--border)] font-mono tabular-nums">
+          {
+            wca.events.map((ev) => (
+              <tr class="hover:bg-[var(--surface)]/70 transition-colors">
+                <td class="py-2.5 pr-2 font-sans font-medium text-[var(--fg)] text-[13px]">{ev.name}</td>
+                <td class="py-2.5 px-2 text-right sm:text-left">
+                  <div class="text-[var(--fg)]">{ev.single}</div>
+                  {ev.singleCountryRank && (
+                    <div class="sm:hidden text-[10px] text-[var(--fg-subtle)]">
+                      #{ev.singleCountryRank.toLocaleString()} IN
+                    </div>
+                  )}
+                </td>
+                <td class="hidden sm:table-cell py-2.5 px-2 text-[var(--fg-subtle)]">
+                  {ev.singleCountryRank ? `#${ev.singleCountryRank.toLocaleString()}` : '—'}
+                </td>
+                <td class="py-2.5 pl-2 text-right sm:text-left">
+                  <div class="text-[var(--fg)]">{ev.average}</div>
+                  {ev.averageCountryRank && (
+                    <div class="sm:hidden text-[10px] text-[var(--fg-subtle)]">
+                      #{ev.averageCountryRank.toLocaleString()} IN
+                    </div>
+                  )}
+                </td>
+                <td class="hidden sm:table-cell py-2.5 pl-2 text-right text-[var(--fg-subtle)]">
+                  {ev.averageCountryRank ? `#${ev.averageCountryRank.toLocaleString()}` : '—'}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.wca-tab');
+  const panelHighlights = document.getElementById('wcaPanelHighlights');
+  const panelAll = document.getElementById('wcaPanelAll');
+
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.wcaTab;
+      tabs.forEach((b) => {
+        b.className =
+          'wca-tab py-1.5 min-h-[36px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer';
+      });
+      btn.className =
+        'wca-tab py-1.5 min-h-[36px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer';
+      panelHighlights?.classList.toggle('hidden', target !== 'highlights');
+      panelAll?.classList.toggle('hidden', target !== 'all');
+    });
+  });
+</script>

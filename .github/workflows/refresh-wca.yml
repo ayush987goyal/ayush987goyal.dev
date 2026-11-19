@@ -1,0 +1,15 @@
+name: Refresh WCA Stats
+
+on:
+  schedule:
+    # Rebuild on the 1st of each month at 06:00 UTC to pick up any new WCA results
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        if: ${{ secrets.VERCEL_DEPLOY_HOOK_URL != '' }}
+        run: curl -fsSL -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"

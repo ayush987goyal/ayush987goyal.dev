@@ -1,0 +1,136 @@
+---
+import { PROFILE } from '../data/profile';
+---
+
+<div
+  id="cmdModal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Quick navigation"
+  class="hidden fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#151311]/55 backdrop-blur-xs"
+>
+  <div class="w-full max-w-md border border-[var(--border-strong)] bg-[var(--bg)] shadow-2xl overflow-hidden">
+    <div class="flex items-center gap-2.5 px-4 py-3.5 rule-dotted-b">
+      <span class="font-mono text-xs text-[var(--accent)]">&gt;</span>
+      <input
+        id="cmdInput"
+        type="text"
+        autocomplete="off"
+        placeholder="Jump to chapter, app, or profile..."
+        class="w-full bg-transparent text-sm text-[var(--fg)] placeholder:text-[var(--fg-subtle)] focus:outline-none"
+      />
+      <kbd class="font-mono text-[10px] px-1.5 py-0.5 border border-[var(--border)] text-[var(--fg-subtle)]">
+        ESC
+      </kbd>
+    </div>
+    <div id="cmdList" class="p-1.5 max-h-80 overflow-y-auto divide-y divide-dotted divide-[var(--border)] text-xs"></div>
+  </div>
+</div>
+
+<script define:vars={{ profile: PROFILE }}>
+  const COMMANDS = [
+    { label: 'Career Dispatch', hint: '#experience', action: () => (window.location.hash = '#experience') },
+    { label: 'Open Source & Live Apps', hint: '#work', action: () => (window.location.hash = '#work') },
+    { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => (window.location.hash = '#cubing') },
+    { label: 'Colophon & Connect', hint: '#contact', action: () => (window.location.hash = '#contact') },
+    {
+      label: `Copy Email (${profile.email})`,
+      hint: 'Clipboard',
+      action: () => document.getElementById('copyEmailBtn')?.click(),
+    },
+    {
+      label: 'Toggle Light / Dark Theme',
+      hint: 'Theme',
+      action: () => document.getElementById('themeToggleBtn')?.click(),
+    },
+    { label: 'GitHub (@ayush987goyal)', hint: 'External ↗', action: () => window.open(profile.links.github, '_blank', 'noopener') },
+    { label: 'LinkedIn', hint: 'External ↗', action: () => window.open(profile.links.linkedin, '_blank', 'noopener') },
+    { label: 'WCA Profile (2014GOYA01)', hint: 'External ↗', action: () => window.open(profile.links.wca, '_blank', 'noopener') },
+  ];
+
+  const modal = document.getElementById('cmdModal');
+  const input = document.getElementById('cmdInput');
+  const list = document.getElementById('cmdList');
+  const openBtn = document.getElementById('openCmdBtn');
+
+  let activeIndex = 0;
+  let filtered = [...COMMANDS];
+
+  function render() {
+    if (!list) return;
+    list.innerHTML = '';
+    if (!filtered.length) {
+      list.innerHTML = '<div class="px-3 py-5 text-center font-editorial italic text-sm text-[var(--fg-subtle)]">No matching chapters</div>';
+      return;
+    }
+    filtered.forEach((cmd, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const isActive = idx === activeIndex;
+      btn.className = `w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors cursor-pointer ${
+        isActive
+          ? 'bg-[var(--surface)] text-[var(--fg)]'
+          : 'text-[var(--fg-muted)] hover:bg-[var(--surface)] hover:text-[var(--fg)]'
+      }`;
+      btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-[10.5px] text-[var(--fg-subtle)]">${cmd.hint}</span>`;
+      btn.addEventListener('click', () => {
+        close();
+        cmd.action();
+      });
+      list.appendChild(btn);
+    });
+  }
+
+  function open() {
+    if (!modal || !input) return;
+    modal.classList.remove('hidden');
+    input.value = '';
+    filtered = [...COMMANDS];
+    activeIndex = 0;
+    render();
+    setTimeout(() => input.focus(), 10);
+  }
+
+  function close() {
+    modal?.classList.add('hidden');
+  }
+
+  openBtn?.addEventListener('click', open);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+
+  input?.addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    filtered = COMMANDS.filter(
+      (c) => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q)
+    );
+    activeIndex = 0;
+    render();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      modal?.classList.contains('hidden') ? open() : close();
+      return;
+    }
+    if (modal?.classList.contains('hidden')) return;
+    if (e.key === 'Escape') {
+      close();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = (activeIndex + 1) % Math.max(filtered.length, 1);
+      render();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = (activeIndex - 1 + Math.max(filtered.length, 1)) % Math.max(filtered.length, 1);
+      render();
+    } else if (e.key === 'Enter' && filtered[activeIndex]) {
+      e.preventDefault();
+      const cmd = filtered[activeIndex];
+      close();
+      cmd.action();
+    }
+  });
+</script>

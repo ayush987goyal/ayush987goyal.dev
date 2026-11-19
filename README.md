@@ -1,43 +1,66 @@
-# Astro Starter Kit: Minimal
+# ayush987goyal.dev
 
-```sh
-npm create astro@latest -- --template minimal
+Minimalist personal home for **Ayush Goyal** (Staff Software Engineer at Google, WCA `2014GOYA01`).
+
+## Stack
+
+- **Framework:** Astro + TypeScript (strict)
+- **Styling:** Tailwind CSS v4 + self-hosted `Newsreader Variable` (optical-size serif), `Inter Variable`, & `JetBrains Mono Variable`
+- **Analytics:** Vercel Web Analytics (`@vercel/analytics/astro`), with optional Cloudflare Web Analytics via `PUBLIC_CF_ANALYTICS_TOKEN`
+- **Live Data:** Build-time fetch from the official WCA REST API (`2014GOYA01`) with automatic fallback to `src/data/wca-snapshot.json`
+- **Writing:** MDX Content Collection ready under `src/content/writing/` (with `/writing` and `/rss.xml`)
+
+## Local Development
+
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Production build check:
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm run build
+npm run preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Deploying to Vercel & Migrating Squarespace Domains DNS
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Your domain is currently registered on **Squarespace Domains** with custom nameservers delegated to **Netlify DNS** (`dns1.p02.nsone.net` – `dns4.p02.nsone.net`). Moving to **Vercel** consolidates your personal site with your existing Vercel apps and eliminates the extra DNS hop:
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. **Deploy on Vercel**
+   - Push this repo to GitHub and import it in Vercel (Astro is auto-detected).
+   - Enable **Analytics** in the Vercel project dashboard (`@vercel/analytics/astro` is already wired in `src/layouts/BaseLayout.astro`).
+   - Add `ayush987goyal.dev` (and `www.ayush987goyal.dev` redirecting to apex) under **Project Settings → Domains**.
 
-## 🧞 Commands
+2. **Switch Squarespace Nameservers & DNS**
+   - Open **Squarespace Domains → `ayush987goyal.dev` → DNS → Domain Nameservers**.
+   - Switch from Netlify custom nameservers back to **Use Squarespace nameservers**.
+   - In **DNS Settings → Custom Records**, add the exact records Vercel displays (standard values):
+     - `A` record: Host `@` → `76.76.21.21`
+     - `CNAME` record: Host `www` → `cname.vercel-dns.com`
+   - Wait for SSL provisioning (usually 5–15 minutes).
 
-All commands are run from the root of the project, from a terminal:
+3. **Free Custom Email Forwarding (Built into Squarespace Domains)**
+   - Go to **Squarespace Domains → `ayush987goyal.dev` → Email → Email Forwarding**.
+   - Add alias: `hi@ayush987goyal.dev` → `ayush987goyal@gmail.com` (free, up to 100 aliases, automatically sets MX records).
+   - *(Prefer to use Gmail directly? Update `PROFILE.email` in `src/data/profile.ts`.)*
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+4. **Optional: Auto-Refresh WCA Stats**
+   - In Vercel **Settings → Git → Deploy Hooks**, create a hook on `main`.
+   - Add it as a GitHub repo secret named `VERCEL_DEPLOY_HOOK_URL`. The monthly workflow in `.github/workflows/refresh-wca.yml` will automatically rebuild the site to pick up any new WCA results.
 
-## 👀 Want to learn more?
+## Adding Writing Later
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Drop any `.md` or `.mdx` file into `src/content/writing/` with frontmatter:
+
+```yaml
+---
+title: "My Essay Title"
+description: "One-line summary."
+publishedAt: 2026-11-20
+draft: false
+---
+```
+
+The `Writing` link in the navigation bar and homepage section will appear automatically.

@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ThemeToggle from '../../components/ThemeToggle.astro';
+import { PROFILE } from '../../data/profile';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} — ${PROFILE.name}`} description={post.data.description}>
+  <header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/90 backdrop-blur-md">
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+      <a href="/writing" class="font-editorial text-[17px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors">
+        ← Writing
+      </a>
+      <ThemeToggle />
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-3xl w-full mx-auto px-5 sm:px-8 py-12">
+    <article class="space-y-7">
+      <header class="space-y-2.5 rule-dotted-b pb-6">
+        <time
+          datetime={post.data.publishedAt.toISOString()}
+          class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent)]"
+        >
+          {
+            post.data.publishedAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          }
+        </time>
+        <h1 class="font-editorial font-normal text-3xl sm:text-5xl leading-[1.05] tracking-[-0.025em] text-[var(--fg)]">
+          {post.data.title}
+        </h1>
+        <p class="text-[15.5px] text-[var(--fg-muted)] leading-relaxed">{post.data.description}</p>
+      </header>
+
+      <div class="space-y-4 text-[16px] leading-[1.7] text-[var(--fg-muted)] [&_h2]:font-editorial [&_h2]:text-2xl [&_h2]:text-[var(--fg)] [&_h2]:pt-5 [&_a]:text-[var(--accent)] [&_a]:underline [&_a]:underline-offset-4 [&_code]:font-mono [&_code]:text-xs [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:bg-[var(--surface)] [&_code]:border [&_code]:border-[var(--border)]">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>

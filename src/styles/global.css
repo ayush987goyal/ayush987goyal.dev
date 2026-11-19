@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Newsreader Variable", "Iowan Old Style", "Palatino Linotype", Georgia, Cambria, serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  /* Warm Literary Paper (Light Mode) */
+  --bg: #fdfaf5;
+  --surface: #f6f1e7;
+  --surface-hover: #efe8dc;
+  --border: #e3dbd0;
+  --border-strong: #c8bfb2;
+  --border-dotted: #bfb6a8;
+  --fg: #181614;
+  --fg-muted: #4a453f;
+  --fg-subtle: #6b635a;
+  --accent: #b45309;
+  --accent-soft: #92400e;
+  --mark: #f4df9a;
+  --selection-bg: #181614;
+  --selection-fg: #fdfaf5;
+
+  /* Signature Deep Espresso Editorial Chapter */
+  --chapter-bg: #151311;
+  --chapter-surface: #1d1a17;
+  --chapter-fg: #faf6ef;
+  --chapter-muted: #b8afa2;
+  --chapter-subtle: #91877b;
+  --chapter-accent: #e0a96d;
+  --chapter-rule: #3f3a34;
+}
+
+html.dark {
+  /* Warm Ink Paper (Dark Mode) */
+  --bg: #121110;
+  --surface: #1b1917;
+  --surface-hover: #24211e;
+  --border: #2c2824;
+  --border-strong: #453f38;
+  --border-dotted: #453f38;
+  --fg: #f5efe6;
+  --fg-muted: #c2b9ac;
+  --fg-subtle: #948c80;
+  --accent: #e0a96d;
+  --accent-soft: #f0c28a;
+  --mark: rgba(224, 169, 109, 0.24);
+  --selection-bg: #e0a96d;
+  --selection-fg: #121110;
+
+  /* Deeper recessed ink band in Dark Mode */
+  --chapter-bg: #0b0a09;
+  --chapter-surface: #141210;
+  --chapter-fg: #faf6ef;
+  --chapter-muted: #b8afa2;
+  --chapter-subtle: #8f8679;
+  --chapter-accent: #e0a96d;
+  --chapter-rule: #332e29;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color-scheme: light;
+    overflow-x: clip;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-fg);
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.font-editorial {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+}
+
+/* Subtle cotton-paper grain overlay */
+.paper-grain {
+  position: relative;
+}
+
+.paper-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+html.dark .paper-grain::after {
+  opacity: 0.038;
+}
+
+/* Print-inspired dotted newspaper rules */
+.rule-dotted-b {
+  border-bottom: 1px dotted var(--border-dotted);
+}
+
+.rule-dotted-t {
+  border-top: 1px dotted var(--border-dotted);
+}
+
+.rule-chapter-b {
+  border-bottom: 1px dotted var(--chapter-rule);
+}
+
+.rule-chapter-t {
+  border-top: 1px dotted var(--chapter-rule);
+}
+
+@media (max-width: 767px) {
+  .rule-dotted-b-mobile {
+    border-bottom: 1px dotted var(--border-dotted);
+  }
+  .rule-chapter-b-mobile {
+    border-bottom: 1px dotted var(--chapter-rule);
+  }
+}
+
+@media (min-width: 768px) {
+  .rule-dotted-r-md {
+    border-right: 1px dotted var(--border-dotted);
+  }
+  .rule-chapter-r-md {
+    border-right: 1px dotted var(--chapter-rule);
+  }
+}
+
+/* Subtle editorial butter highlighter swipe */
+.editorial-mark {
+  background: linear-gradient(180deg, transparent 54%, var(--mark) 54%, var(--mark) 92%, transparent 92%);
+  padding: 0 3px;
+}
+
+/* Crisp editorial link underline */
+.editorial-link {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.editorial-link:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* Editorial portrait stamp treatment */
+.portrait-stamp {
+  filter: grayscale(88%) contrast(1.06) sepia(14%);
+  transition: filter 320ms ease;
+}
+
+.portrait-stamp:hover {
+  filter: grayscale(18%) contrast(1.02) sepia(4%);
+}
+
+/* Smooth details disclosure animation */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
