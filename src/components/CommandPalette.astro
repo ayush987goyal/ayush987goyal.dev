@@ -6,34 +6,99 @@ import { PROFILE } from '../data/profile';
   id="cmdModal"
   role="dialog"
   aria-modal="true"
-  aria-label="Quick navigation"
-  class="hidden fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#151311]/55 backdrop-blur-xs"
+  aria-label="Site navigation and quick search"
+  class="hidden fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-[#151311]/60 backdrop-blur-xs"
 >
   <div class="w-full max-w-md border border-[var(--border-strong)] bg-[var(--bg)] shadow-2xl overflow-hidden">
     <div class="flex items-center gap-2.5 px-4 py-3.5 rule-dotted-b">
-      <span class="font-mono text-xs text-[var(--accent)]">&gt;</span>
+      <span class="font-mono text-xs text-[var(--accent)]" aria-hidden="true">&gt;</span>
       <input
         id="cmdInput"
         type="text"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="true"
+        aria-controls="cmdList"
+        aria-label="Filter chapters, links, or actions"
         autocomplete="off"
-        placeholder="Jump to chapter, app, or profile..."
+        placeholder="Jump to chapter, writing, or profile..."
         class="w-full bg-transparent text-sm text-[var(--fg)] placeholder:text-[var(--fg-subtle)] focus:outline-none"
       />
-      <kbd class="font-mono text-[10px] px-1.5 py-0.5 border border-[var(--border)] text-[var(--fg-subtle)]">
+      <button
+        id="cmdCloseBtn"
+        type="button"
+        aria-label="Close navigation menu"
+        class="font-mono text-[10px] px-2 py-1 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer shrink-0"
+      >
         ESC
-      </kbd>
+      </button>
     </div>
-    <div id="cmdList" class="p-1.5 max-h-80 overflow-y-auto divide-y divide-dotted divide-[var(--border)] text-xs"></div>
+    <div
+      id="cmdList"
+      role="listbox"
+      aria-label="Navigation items"
+      class="p-1.5 max-h-80 overflow-y-auto divide-y divide-dotted divide-[var(--border)] text-xs"
+    ></div>
   </div>
 </div>
 
+<!-- Global accessible status toast (for Copy Email from anywhere) -->
+<div
+  id="globalToast"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+  class="pointer-events-none fixed bottom-5 right-5 z-50 translate-y-2 opacity-0 transition-all duration-200 px-3.5 py-2 border border-[var(--border-strong)] bg-[var(--bg)] text-[var(--fg)] font-mono text-xs shadow-lg"
+></div>
+
 <script define:vars={{ profile: PROFILE }}>
+  const isHome = window.location.pathname === '/' || window.location.pathname === '';
+  const goSection = (hash) => {
+    if (isHome) {
+      window.location.hash = hash;
+    } else {
+      window.location.href = `/${hash}`;
+    }
+  };
+
+  let toastTimer = null;
+  function showToast(message) {
+    const toast = document.getElementById('globalToast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.remove('opacity-0', 'translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.add('opacity-0', 'translate-y-2');
+      toast.classList.remove('opacity-100', 'translate-y-0');
+    }, 2400);
+  }
+
+  async function copyEmailReliable() {
+    const email = profile.email;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(email);
+      showToast(`Copied ${email} ✓`);
+      return true;
+    } catch {
+      showToast(`Email: ${email}`);
+      window.location.href = `mailto:${email}`;
+      return false;
+    }
+  }
+
+  window.__ayushCopyEmail = copyEmailReliable;
+  window.__ayushToast = showToast;
+
   const COMMANDS = [
-    { label: 'Career Dispatch', hint: '#experience', action: () => (window.location.hash = '#experience') },
-    { label: 'Open Source, Writing & Live Apps', hint: '#work', action: () => (window.location.hash = '#work') },
-    { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => (window.location.hash = '#cubing') },
+    { label: 'Home', hint: '/', action: () => (window.location.href = '/') },
+    { label: 'Career Dispatch', hint: '#experience', action: () => goSection('#experience') },
+    { label: 'Open Source & Weekend Builds', hint: '#work', action: () => goSection('#work') },
+    { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => goSection('#cubing') },
     { label: 'Writing & AWS Publications', hint: '/writing', action: () => (window.location.href = '/writing') },
-    { label: 'Colophon & Connect', hint: '#contact', action: () => (window.location.hash = '#contact') },
+    { label: 'Colophon & Connect', hint: '#contact', action: () => goSection('#contact') },
     {
       label: 'AWS ML Blog: Bedrock & MCP (2025)',
       hint: 'External ↗',
@@ -47,7 +112,7 @@ import { PROFILE } from '../data/profile';
     {
       label: `Copy Email (${profile.email})`,
       hint: 'Clipboard',
-      action: () => document.getElementById('copyEmailBtn')?.click(),
+      action: () => copyEmailReliable(),
     },
     {
       label: 'Toggle Light / Dark Theme',
@@ -63,38 +128,52 @@ import { PROFILE } from '../data/profile';
   const input = document.getElementById('cmdInput');
   const list = document.getElementById('cmdList');
   const openBtn = document.getElementById('openCmdBtn');
+  const closeBtn = document.getElementById('cmdCloseBtn');
 
   let activeIndex = 0;
   let filtered = [...COMMANDS];
+  let previousFocus = null;
 
   function render() {
-    if (!list) return;
+    if (!list || !input) return;
     list.innerHTML = '';
     if (!filtered.length) {
+      input.removeAttribute('aria-activedescendant');
       list.innerHTML = '<div class="px-3 py-5 text-center font-editorial italic text-sm text-[var(--fg-subtle)]">No matching chapters</div>';
       return;
     }
     filtered.forEach((cmd, idx) => {
       const btn = document.createElement('button');
       btn.type = 'button';
+      btn.id = `cmd-opt-${idx}`;
+      btn.setAttribute('role', 'option');
       const isActive = idx === activeIndex;
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
       btn.className = `w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors cursor-pointer ${
         isActive
           ? 'bg-[var(--surface)] text-[var(--fg)]'
           : 'text-[var(--fg-muted)] hover:bg-[var(--surface)] hover:text-[var(--fg)]'
       }`;
-      btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-[10.5px] text-[var(--fg-subtle)]">${cmd.hint}</span>`;
+      btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-[11px] text-[var(--fg-subtle)]">${cmd.hint}</span>`;
       btn.addEventListener('click', () => {
         close();
         cmd.action();
       });
       list.appendChild(btn);
     });
+
+    const activeEl = document.getElementById(`cmd-opt-${activeIndex}`);
+    if (activeEl) {
+      input.setAttribute('aria-activedescendant', activeEl.id);
+      activeEl.scrollIntoView({ block: 'nearest' });
+    }
   }
 
   function open() {
     if (!modal || !input) return;
+    previousFocus = document.activeElement;
     modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
     input.value = '';
     filtered = [...COMMANDS];
     activeIndex = 0;
@@ -103,10 +182,16 @@ import { PROFILE } from '../data/profile';
   }
 
   function close() {
-    modal?.classList.add('hidden');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (previousFocus && typeof previousFocus.focus === 'function') {
+      previousFocus.focus();
+    }
   }
 
   openBtn?.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) close();
   });
@@ -126,9 +211,24 @@ import { PROFILE } from '../data/profile';
       modal?.classList.contains('hidden') ? open() : close();
       return;
     }
-    if (modal?.classList.contains('hidden')) return;
+    if (!modal || modal.classList.contains('hidden')) return;
+
     if (e.key === 'Escape') {
+      e.preventDefault();
       close();
+    } else if (e.key === 'Tab') {
+      const focusables = modal.querySelectorAll('input, button');
+      if (focusables.length) {
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       activeIndex = (activeIndex + 1) % Math.max(filtered.length, 1);

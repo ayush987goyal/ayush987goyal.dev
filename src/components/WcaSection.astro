@@ -19,10 +19,10 @@ const cube444 = byId.get('444');
 <section id="cubing" class="max-w-5xl mx-auto px-5 sm:px-10 py-14 sm:py-16 space-y-10">
   <!-- Specimen Header + Frameless 3D Cube -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-    <div class="md:col-span-8 space-y-3">
+    <div class="md:col-span-7 space-y-3">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">
         <span>Off the Clock</span>
-        <span class="text-[var(--fg-subtle)]">·</span>
+        <span class="text-[var(--fg-subtle)]" aria-hidden="true">·</span>
         <a
           href={wca.profileUrl}
           target="_blank"
@@ -34,22 +34,22 @@ const cube444 = byId.get('444');
       </div>
 
       <h2 class="font-editorial font-normal text-3xl sm:text-[42px] leading-[1.06] tracking-[-0.025em] text-[var(--fg)]">
-        Ten official medals across <em class="italic">fourteen</em> events.
+        {wca.medals.total} official medals across <em class="italic">{wca.events.length}</em> events.
       </h2>
 
       <p class="text-[15px] leading-[1.65] text-[var(--fg-muted)] max-w-2xl">
-        {wca.medals.silver} Silver and {wca.medals.bronze} Bronze across {wca.competitionCount} World Cube Association competitions — highlighted by
+        {wca.medals.gold > 0 ? `${wca.medals.gold} Gold, ` : ''}{wca.medals.silver} Silver and {wca.medals.bronze} Bronze across {wca.competitionCount} World Cube Association competitions — highlighted by
         <strong class="font-medium text-[var(--fg)]"> {fmc?.single ?? '38 moves'}</strong> in 3×3 Fewest Moves (#{fmc?.singleCountryRank?.toLocaleString() ?? '183'} India),
         <strong class="font-medium text-[var(--fg)]"> {bld?.single ?? '2:24.70'}</strong> Blindfolded (#{bld?.singleCountryRank?.toLocaleString() ?? '201'} India), and a
         <strong class="font-medium text-[var(--fg)]"> {cube333?.single ?? '10.86s'}</strong> 3×3 single.
       </p>
     </div>
 
-    <!-- Frameless 3D Cube + Live Sync Readout -->
-    <div class="md:col-span-4 flex items-center justify-start md:justify-end gap-5">
+    <!-- Frameless 3D Cube + Live WCA Telemetry -->
+    <div class="md:col-span-5 flex items-center justify-start md:justify-end gap-5">
       <RubiksCube />
-      <div class="font-mono text-[11px] text-[var(--fg-subtle)] space-y-1.5 border-l border-dotted border-[var(--border-dotted)] pl-4">
-        <div class="text-[var(--fg)] font-medium">Official WCA Sync</div>
+      <div class="font-mono text-[11px] text-[var(--fg-subtle)] space-y-1.5 border-l border-dotted border-[var(--border-dotted)] pl-4 tabular-nums">
+        <div class="text-[var(--fg)] font-medium uppercase tracking-[0.08em]">WCA API · Live</div>
         <div>3×3 · <span class="text-[var(--fg)]">{cube333?.single ?? '10.86s'}</span></div>
         <div>FMC · <span class="text-[var(--fg)]">{fmc?.single ?? '38 moves'}</span></div>
         <div>3BLD · <span class="text-[var(--fg)]">{bld?.single ?? '2:24.70'}</span></div>
@@ -60,7 +60,7 @@ const cube444 = byId.get('444');
   <!-- Editorial Dotted Ledger Strip -->
   <div class="rule-dotted-t rule-dotted-b py-6 grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-6">
     <div class="space-y-1">
-      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">WCA Medals</div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">WCA Medals</div>
       <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">{wca.medals.total}</div>
       <div class="text-xs text-[var(--fg-muted)]">
         {wca.medals.gold > 0 ? `${wca.medals.gold}G · ` : ''}{wca.medals.silver} Silver · {wca.medals.bronze} Bronze
@@ -68,13 +68,13 @@ const cube444 = byId.get('444');
     </div>
 
     <div class="space-y-1">
-      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">Competitions</div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">Competitions</div>
       <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">{wca.competitionCount}</div>
       <div class="text-xs text-[var(--fg-muted)]">{wca.events.length} Official Events</div>
     </div>
 
     <div class="space-y-1">
-      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">3×3 Fewest Moves</div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">3×3 Fewest Moves</div>
       <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">
         {fmc ? fmc.single.replace(' moves', '') : '38'}<span class="text-lg italic text-[var(--fg-subtle)] ml-1">moves</span>
       </div>
@@ -84,11 +84,11 @@ const cube444 = byId.get('444');
     </div>
 
     <div class="space-y-1">
-      <div class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">3×3 Blindfolded</div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">3×3 Blindfolded</div>
       <div class="font-editorial text-3xl sm:text-4xl text-[var(--fg)] tabular-nums leading-none">
         {bld?.single ?? '2:24.70'}
       </div>
-      <div class="text-xs text-[var(--fg-muted)]">
+      <div class="text-xs text-[var(--accent)] font-mono">
         India #{bld?.singleCountryRank?.toLocaleString() ?? '201'} · NCR ’14 Silver
       </div>
     </div>
@@ -96,36 +96,46 @@ const cube444 = byId.get('444');
 
   <!-- Highlights / All Events Editorial Toggle -->
   <div class="space-y-5">
-    <div class="flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-5 text-xs font-mono">
+    <div class="flex items-center justify-between gap-4">
+      <div role="tablist" aria-label="WCA personal best views" class="flex items-center gap-6 text-xs font-mono">
         <button
+          id="wcaTabHighlights"
           type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="wcaPanelHighlights"
           data-wca-tab="highlights"
-          class="wca-tab py-1.5 min-h-[36px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer"
+          class="wca-tab py-2 min-h-[40px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer"
         >
           Selected PBs
         </button>
         <button
+          id="wcaTabAll"
           type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="wcaPanelAll"
           data-wca-tab="all"
-          class="wca-tab py-1.5 min-h-[36px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer"
+          class="wca-tab py-2 min-h-[40px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer"
         >
           All {wca.events.length} Events
         </button>
       </div>
-      <span class="font-mono text-[11px] text-[var(--fg-subtle)]">
-        Synced from WCA API
-      </span>
     </div>
 
     <!-- Selected PBs (3-column editorial strip, zero boxy cards) -->
-    <div id="wcaPanelHighlights" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div
+      id="wcaPanelHighlights"
+      role="tabpanel"
+      aria-labelledby="wcaTabHighlights"
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
       {
         cube333 && (
           <div class="md:pr-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
             <div class="flex items-baseline justify-between">
               <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">3×3×3 Cube</span>
-              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube333.average} avg</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)] tabular-nums">{cube333.average} avg</span>
             </div>
             <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube333.single}</div>
             <div class="text-xs text-[var(--fg-muted)]">Official competition single PB</div>
@@ -138,7 +148,7 @@ const cube444 = byId.get('444');
           <div class="md:pr-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
             <div class="flex items-baseline justify-between">
               <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">2×2×2 Cube</span>
-              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube222.average} avg</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)] tabular-nums">{cube222.average} avg</span>
             </div>
             <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube222.single}</div>
             <div class="text-xs text-[var(--accent)] font-mono">
@@ -153,7 +163,7 @@ const cube444 = byId.get('444');
           <div class="space-y-1">
             <div class="flex items-baseline justify-between">
               <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--fg-subtle)]">4×4×4 Cube</span>
-              <span class="font-mono text-[11px] text-[var(--fg-subtle)]">{cube444.average} avg</span>
+              <span class="font-mono text-[11px] text-[var(--fg-subtle)] tabular-nums">{cube444.average} avg</span>
             </div>
             <div class="font-editorial text-3xl text-[var(--fg)] tabular-nums">{cube444.single}</div>
             <div class="text-xs text-[var(--accent)] font-mono">Cerulean ’17 Silver</div>
@@ -162,16 +172,22 @@ const cube444 = byId.get('444');
       }
     </div>
 
-    <!-- All 14 Events Editorial Table (Zero horizontal overflow on 390px mobile!) -->
-    <div id="wcaPanelAll" class="hidden rule-dotted-t rule-dotted-b">
+    <!-- All Events Editorial Table (Zero horizontal overflow on 390px mobile) -->
+    <div
+      id="wcaPanelAll"
+      role="tabpanel"
+      aria-labelledby="wcaTabAll"
+      class="hidden rule-dotted-t rule-dotted-b"
+    >
       <table class="w-full text-left text-xs">
-        <thead class="border-b border-dotted border-[var(--border-dotted)] text-[var(--fg-subtle)] font-mono text-[10.5px] uppercase tracking-wider">
+        <caption class="sr-only">Official World Cube Association personal records for {wca.wcaId}</caption>
+        <thead class="border-b border-dotted border-[var(--border-dotted)] text-[var(--fg-subtle)] font-mono text-[11px] uppercase tracking-wider">
           <tr>
-            <th class="py-3 pr-2 font-medium">Event</th>
-            <th class="py-3 px-2 font-medium text-right sm:text-left">Single</th>
-            <th class="hidden sm:table-cell py-3 px-2 font-medium">India</th>
-            <th class="py-3 pl-2 font-medium text-right sm:text-left">Average</th>
-            <th class="hidden sm:table-cell py-3 pl-2 font-medium text-right">India</th>
+            <th scope="col" class="py-3 pr-2 font-medium">Event</th>
+            <th scope="col" class="py-3 px-2 font-medium text-right sm:text-left">Single</th>
+            <th scope="col" class="hidden sm:table-cell py-3 px-2 font-medium">India</th>
+            <th scope="col" class="py-3 pl-2 font-medium text-right sm:text-left">Average</th>
+            <th scope="col" class="hidden sm:table-cell py-3 pl-2 font-medium text-right">India</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-dotted divide-[var(--border)] font-mono tabular-nums">
@@ -182,7 +198,7 @@ const cube444 = byId.get('444');
                 <td class="py-2.5 px-2 text-right sm:text-left">
                   <div class="text-[var(--fg)]">{ev.single}</div>
                   {ev.singleCountryRank && (
-                    <div class="sm:hidden text-[10px] text-[var(--fg-subtle)]">
+                    <div class="sm:hidden text-[11px] text-[var(--fg-subtle)]">
                       #{ev.singleCountryRank.toLocaleString()} IN
                     </div>
                   )}
@@ -193,7 +209,7 @@ const cube444 = byId.get('444');
                 <td class="py-2.5 pl-2 text-right sm:text-left">
                   <div class="text-[var(--fg)]">{ev.average}</div>
                   {ev.averageCountryRank && (
-                    <div class="sm:hidden text-[10px] text-[var(--fg-subtle)]">
+                    <div class="sm:hidden text-[11px] text-[var(--fg-subtle)]">
                       #{ev.averageCountryRank.toLocaleString()} IN
                     </div>
                   )}
@@ -219,11 +235,12 @@ const cube444 = byId.get('444');
     btn.addEventListener('click', () => {
       const target = btn.dataset.wcaTab;
       tabs.forEach((b) => {
-        b.className =
-          'wca-tab py-1.5 min-h-[36px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer';
+        const active = b === btn;
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+        b.className = active
+          ? 'wca-tab py-2 min-h-[40px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer'
+          : 'wca-tab py-2 min-h-[40px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer';
       });
-      btn.className =
-        'wca-tab py-1.5 min-h-[36px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer';
       panelHighlights?.classList.toggle('hidden', target !== 'highlights');
       panelAll?.classList.toggle('hidden', target !== 'all');
     });

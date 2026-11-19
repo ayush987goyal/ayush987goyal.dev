@@ -1,0 +1,95 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { PROFILE } from '../data/profile';
+
+interface Props {
+  active?: 'home' | 'writing';
+}
+
+const { active = 'home' } = Astro.props;
+const prefix = active === 'home' ? '' : '/';
+---
+
+<header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/92 backdrop-blur-md">
+  <div class="max-w-5xl mx-auto px-5 sm:px-10 h-14 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      <a
+        href={active === 'home' ? '#top' : '/'}
+        class="font-editorial text-[18px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors truncate"
+      >
+        {PROFILE.domain}
+      </a>
+      <span class="hidden lg:inline text-[var(--border-strong)]" aria-hidden="true">·</span>
+      <span
+        id="blrClock"
+        class="hidden lg:inline font-mono tabular-nums text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]"
+      >
+        BLR · IST
+      </span>
+    </div>
+
+    <nav aria-label="Primary" class="hidden md:flex items-center gap-6 text-xs font-mono uppercase tracking-[0.12em] text-[var(--fg-subtle)]">
+      <a href={`${prefix}#experience`} class="hover:text-[var(--fg)] transition-colors">Career</a>
+      <a href={`${prefix}#work`} class="hover:text-[var(--fg)] transition-colors">Work</a>
+      <a href={`${prefix}#cubing`} class="hover:text-[var(--fg)] transition-colors">Cubing</a>
+      <a
+        href="/writing"
+        aria-current={active === 'writing' ? 'page' : undefined}
+        class:list={[
+          'transition-colors',
+          active === 'writing'
+            ? 'text-[var(--fg)] underline decoration-[var(--accent)] underline-offset-4'
+            : 'hover:text-[var(--fg)]',
+        ]}
+      >
+        Writing
+      </a>
+      <a href={`${prefix}#contact`} class="hover:text-[var(--fg)] transition-colors">Colophon</a>
+    </nav>
+
+    <div class="flex items-center gap-2 shrink-0">
+      <!-- Visible Writing link on mobile so visitors can always discover /writing without scrolling -->
+      <a
+        href={active === 'writing' ? '/' : '/writing'}
+        class="md:hidden inline-flex items-center h-9 px-2.5 text-[11px] font-mono uppercase tracking-[0.1em] text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
+      >
+        {active === 'writing' ? 'Home' : 'Writing'}
+      </a>
+
+      <button
+        id="openCmdBtn"
+        type="button"
+        aria-label="Open navigation menu and quick search"
+        aria-haspopup="dialog"
+        aria-controls="cmdModal"
+        class="inline-flex items-center gap-2 h-9 px-3 text-xs font-mono text-[var(--fg-muted)] bg-[var(--surface)]/75 border border-[var(--border)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
+      >
+        <span class="md:hidden text-[11px] uppercase tracking-wider text-[var(--fg)]">Menu</span>
+        <span class="hidden md:inline text-[11px] uppercase tracking-wider">Index</span>
+        <kbd class="hidden md:inline text-[11px] text-[var(--fg)]">⌘K</kbd>
+      </button>
+
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<script>
+  const clockEl = document.getElementById('blrClock');
+  function updateBlrClock() {
+    if (!clockEl) return;
+    try {
+      const formatted = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }).format(new Date());
+      clockEl.textContent = `BLR · ${formatted} IST`;
+    } catch {
+      // Static fallback retained
+    }
+  }
+  updateBlrClock();
+  setInterval(updateBlrClock, 30000);
+</script>

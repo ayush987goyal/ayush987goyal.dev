@@ -1,12 +1,13 @@
 ---
 ---
 
-<div class="inline-flex flex-col items-center gap-1 shrink-0 group">
+<div class="inline-flex flex-col items-center gap-1.5 shrink-0">
   <div
     id="cubeScene"
     class="cube-scene"
-    role="img"
-    aria-label="Interactive 3D Rubik's Cube — drag to rotate, click for a turn, double-click to solve"
+    tabindex="0"
+    role="button"
+    aria-label="Interactive 3D Rubik's Cube. Drag or use arrow keys to rotate, click or press Enter for a turn, double-click or press R to solve."
     title="Drag to rotate · Click for a turn · Double-click to solve"
   >
     <div id="cube3d" class="cube-3d">
@@ -20,7 +21,7 @@
     <div class="cube-shadow" aria-hidden="true"></div>
   </div>
   <span
-    class="font-mono text-[10px] tracking-wider uppercase text-[var(--fg-subtle)] opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity select-none"
+    class="font-mono text-[11px] tracking-[0.14em] uppercase text-[var(--fg-subtle)] select-none"
     aria-hidden="true"
   >
     drag · turn
@@ -29,9 +30,9 @@
 
 <style>
   .cube-scene {
-    width: 84px;
-    height: 92px;
-    perspective: 380px;
+    width: 96px;
+    height: 102px;
+    perspective: 420px;
     position: relative;
     cursor: grab;
     user-select: none;
@@ -44,8 +45,8 @@
     position: absolute;
     bottom: 2px;
     left: 50%;
-    width: 52px;
-    height: 11px;
+    width: 60px;
+    height: 13px;
     transform: translateX(-50%);
     border-radius: 999px;
     background: radial-gradient(ellipse at center, rgba(24, 22, 20, 0.24) 0%, rgba(24, 22, 20, 0) 72%);
@@ -53,41 +54,45 @@
     pointer-events: none;
   }
   :global(html.dark) .cube-shadow {
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 74%);
+    background: radial-gradient(ellipse at center, rgba(229, 176, 114, 0.16) 0%, rgba(0, 0, 0, 0) 76%);
   }
   .cube-3d {
-    width: 58px;
-    height: 58px;
+    width: 66px;
+    height: 66px;
     position: absolute;
-    top: 10px;
-    left: 13px;
+    top: 11px;
+    left: 15px;
     transform-style: preserve-3d;
   }
   .cube-face {
     position: absolute;
-    width: 58px;
-    height: 58px;
+    width: 66px;
+    height: 66px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 2.5px;
-    padding: 3px;
+    padding: 3.5px;
     border-radius: 5px;
     background: #1a1816;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     backface-visibility: hidden;
+  }
+  :global(html.dark) .cube-face {
+    background: #2b2723;
+    border: 1px solid rgba(255, 245, 230, 0.2);
   }
   .cube-face :global(.sticker) {
     border-radius: 2px;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.24);
     transition: background-color 180ms ease;
   }
-  .face-F { transform: rotateY(0deg) translateZ(29px); }
-  .face-B { transform: rotateY(180deg) translateZ(29px); }
-  .face-R { transform: rotateY(90deg) translateZ(29px); }
-  .face-L { transform: rotateY(-90deg) translateZ(29px); }
-  .face-U { transform: rotateX(90deg) translateZ(29px); }
-  .face-D { transform: rotateX(-90deg) translateZ(29px); }
+  .face-F { transform: rotateY(0deg) translateZ(33px); }
+  .face-B { transform: rotateY(180deg) translateZ(33px); }
+  .face-R { transform: rotateY(90deg) translateZ(33px); }
+  .face-L { transform: rotateY(-90deg) translateZ(33px); }
+  .face-U { transform: rotateX(90deg) translateZ(33px); }
+  .face-D { transform: rotateX(-90deg) translateZ(33px); }
 
   /* Warm editorial sticker palette */
   .cube-face :global(.c-W) { background-color: #f7f4ee; }
@@ -193,27 +198,74 @@
     let rotY = 28;
     let dragging = false;
     let hovered = false;
+    let focused = false;
+    let visible = false;
     let moved = false;
     let lastX = 0;
     let lastY = 0;
+    let rafId: number | null = null;
 
     const updateTransform = () => {
       cube3d.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
     };
 
+    const doRandomTurn = () => {
+      const nextMove = MOVES[Math.floor(Math.random() * MOVES.length)];
+      applyMove(nextMove);
+      renderStickers();
+    };
+
+    const stopLoop = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
     const loop = () => {
-      if (!dragging && !hovered && !reducedMotion) {
-        rotY += 0.18;
+      if (!visible || reducedMotion) {
+        stopLoop();
+        return;
+      }
+      if (!dragging && !hovered && !focused) {
+        rotY += 0.16;
         updateTransform();
       }
-      requestAnimationFrame(loop);
+      rafId = requestAnimationFrame(loop);
     };
+
+    const startLoop = () => {
+      if (!reducedMotion && visible && rafId === null) {
+        rafId = requestAnimationFrame(loop);
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          visible = entries[0]?.isIntersecting ?? false;
+          if (visible) startLoop();
+          else stopLoop();
+        },
+        { threshold: 0.05 }
+      );
+      io.observe(cubeScene);
+    } else {
+      visible = true;
+      startLoop();
+    }
 
     cubeScene.addEventListener('pointerenter', () => {
       hovered = true;
     });
     cubeScene.addEventListener('pointerleave', () => {
       hovered = false;
+    });
+    cubeScene.addEventListener('focus', () => {
+      focused = true;
+    });
+    cubeScene.addEventListener('blur', () => {
+      focused = false;
     });
 
     cubeScene.addEventListener('pointerdown', (e) => {
@@ -237,11 +289,7 @@
     });
 
     cubeScene.addEventListener('pointerup', () => {
-      if (!moved) {
-        const nextMove = MOVES[Math.floor(Math.random() * MOVES.length)];
-        applyMove(nextMove);
-        renderStickers();
-      }
+      if (!moved) doRandomTurn();
       dragging = false;
     });
 
@@ -250,11 +298,37 @@
       renderStickers();
     });
 
-    // Start with a tasteful solved-plus-3-move pattern (double-click resets to solved)
+    cubeScene.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        doRandomTurn();
+      } else if (e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        resetCubeState();
+        renderStickers();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        rotY -= 20;
+        updateTransform();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        rotY += 20;
+        updateTransform();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        rotX += 20;
+        updateTransform();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        rotX -= 20;
+        updateTransform();
+      }
+    });
+
+    // Start with a tasteful solved-plus-3-move pattern (double-click or press R to solve)
     resetCubeState();
     ['R', 'U', "F'"].forEach(applyMove);
     renderStickers();
     updateTransform();
-    requestAnimationFrame(loop);
   }
 </script>

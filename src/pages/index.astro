@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import WcaSection from '../components/WcaSection.astro';
 import { EDUCATION, EXPERIENCE, FEATURED_OSS, LIVE_APPS, PROFILE } from '../data/profile';
@@ -14,52 +15,15 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
 ---
 
 <BaseLayout>
-  <!-- Sticky Editorial Masthead -->
-  <header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/90 backdrop-blur-md">
-    <div class="max-w-5xl mx-auto px-5 sm:px-10 h-14 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3 min-w-0">
-        <a
-          href="#top"
-          class="font-editorial text-[18px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors truncate"
-        >
-          {PROFILE.domain}
-        </a>
-        <span class="hidden lg:inline text-[var(--border-strong)]">·</span>
-        <span id="blrClock" class="hidden lg:inline font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg-subtle)]">
-          BLR · IST
-        </span>
-      </div>
+  <SiteHeader active="home" />
 
-      <nav aria-label="Primary" class="hidden md:flex items-center gap-6 text-xs font-mono uppercase tracking-[0.12em] text-[var(--fg-subtle)]">
-        <a href="#experience" class="hover:text-[var(--fg)] transition-colors">Career</a>
-        <a href="#work" class="hover:text-[var(--fg)] transition-colors">Work</a>
-        <a href="#cubing" class="hover:text-[var(--fg)] transition-colors">Cubing</a>
-        <a href="/writing" class="hover:text-[var(--fg)] transition-colors">Writing</a>
-        <a href="#contact" class="hover:text-[var(--fg)] transition-colors">Colophon</a>
-      </nav>
-
-      <div class="flex items-center gap-2 shrink-0">
-        <button
-          id="openCmdBtn"
-          type="button"
-          aria-label="Open quick navigation"
-          class="inline-flex items-center gap-2 h-9 px-3 text-xs font-mono text-[var(--fg-muted)] bg-[var(--surface)]/70 border border-[var(--border)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
-        >
-          <span class="hidden sm:inline text-[11px] uppercase tracking-wider">Index</span>
-          <kbd class="text-[11px] text-[var(--fg)]">⌘K</kbd>
-        </button>
-        <ThemeToggle />
-      </div>
-    </div>
-  </header>
-
-  <main id="top" class="flex-1">
+  <main id="main-content" class="flex-1">
     <!-- =================================================================== -->
     <!-- CHAPTER I: WARM LITERARY PAPER HERO + CAREER DISPATCH               -->
     <!-- =================================================================== -->
-    <div class="max-w-5xl mx-auto px-5 sm:px-10 pt-10 sm:pt-16 pb-14 sm:pb-16 space-y-12">
+    <div id="top" class="max-w-5xl mx-auto px-5 sm:px-10 pt-10 sm:pt-16 pb-14 sm:pb-16 space-y-12">
       <!-- Editorial Hero Spread -->
-      <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-end">
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 items-end">
         <div class="md:col-span-9 space-y-6">
           <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">
             {PROFILE.role} · {PROFILE.location}
@@ -71,60 +35,68 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
 
           <p class="text-[16px] sm:text-[17px] leading-[1.64] text-[var(--fg-muted)] max-w-[60ch]">
             I'm <strong class="font-medium text-[var(--fg)]">{PROFILE.name}</strong>, a Staff Software Engineer at
-            <strong class="font-medium text-[var(--fg)]"> Google</strong>. Over the past
+            <strong class="font-medium text-[var(--fg)]"> Google</strong>. Over the past{' '}
             <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — spanning seven years at Amazon (AWS Bedrock, AI Computer Vision, Pharmacy), Goldman Sachs, and Citi — I've focused on turning complex infrastructure into calm, enduring software.
           </p>
 
-          <!-- Hairline Underlined Action Links (Zero Pill Clutter) -->
-          <div class="flex flex-wrap items-center gap-x-6 gap-y-3 pt-1 text-[14px]">
-            <button
-              id="copyEmailBtn"
-              type="button"
-              data-email={PROFILE.email}
-              class="inline-flex items-baseline gap-2 py-1 text-[var(--fg)] font-medium underline decoration-[var(--accent)] underline-offset-4 decoration-1 hover:text-[var(--accent)] transition-colors cursor-pointer"
-            >
-              <span id="copyEmailLabel">{PROFILE.email}</span>
-              <span class="font-mono text-[11px] text-[var(--fg-subtle)] no-underline">copy</span>
-            </button>
-            <a href={PROFILE.links.github} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+          <!-- Hairline Underlined Action Links (Generous mobile touch targets) -->
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 text-[14px]">
+            <span class="inline-flex items-baseline gap-2.5 py-1.5">
+              <a
+                href={`mailto:${PROFILE.email}`}
+                class="text-[var(--fg)] font-medium underline decoration-[var(--accent)] underline-offset-4 decoration-1 hover:text-[var(--accent)] transition-colors"
+              >
+                {PROFILE.email}
+              </a>
+              <button
+                id="copyEmailBtn"
+                type="button"
+                aria-label={`Copy ${PROFILE.email} to clipboard`}
+                class="font-mono text-[11px] px-1.5 py-0.5 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
+              >
+                <span id="copyEmailLabel">copy</span>
+              </button>
+            </span>
+            <a href={PROFILE.links.github} target="_blank" rel="noopener" class="editorial-link py-1.5 text-[var(--fg-muted)]">
               GitHub ↗
             </a>
-            <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+            <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="editorial-link py-1.5 text-[var(--fg-muted)]">
               LinkedIn ↗
             </a>
-            <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="editorial-link py-1 text-[var(--fg-muted)]">
+            <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="editorial-link py-1.5 text-[var(--fg-muted)]">
               WCA {PROFILE.wcaId} ↗
             </a>
           </div>
         </div>
 
-        <!-- Editorial Portrait Stamp -->
-        <div class="md:col-span-3 flex md:flex-col items-center md:items-end justify-start md:justify-between gap-5">
-          <figure class="p-1.5 border border-[var(--border-strong)] bg-[var(--surface)] shrink-0">
-            <div class="w-24 h-24 sm:w-28 sm:h-28 overflow-hidden bg-[var(--chapter-bg)] relative">
+        <!-- Editorial Portrait Stamp (Tightly aligned caption within column width) -->
+        <div class="md:col-span-3 flex md:flex-col items-center md:items-end justify-start gap-4">
+          <figure class="w-32 sm:w-36 p-1.5 border border-[var(--border-strong)] bg-[var(--surface)] shrink-0">
+            <div class="w-full aspect-square overflow-hidden bg-[var(--chapter-bg)] relative">
               <img
                 src="/avatar.jpg"
                 alt={PROFILE.name}
-                width="112"
-                height="112"
+                width="144"
+                height="144"
                 loading="eager"
-                class="w-full h-full object-cover object-[44%_14%] scale-[1.55] origin-[44%_14%] portrait-stamp"
+                class="w-full h-full object-cover object-[44%_12%] scale-[1.78] origin-[44%_12%] portrait-stamp"
               />
             </div>
-            <figcaption class="mt-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-center text-[var(--fg-subtle)]">
+            <figcaption class="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-center text-[var(--fg-subtle)]">
               {PROFILE.coordinates}
             </figcaption>
           </figure>
 
-          <div class="text-left md:text-right font-mono text-[11px] text-[var(--fg-subtle)] leading-relaxed">
+          <div class="md:w-36 text-left md:text-right font-mono text-[11px] text-[var(--fg-subtle)] leading-snug space-y-0.5">
             <div class="text-[var(--fg)]">Vol. IV · 2026</div>
-            <div>IIT Roorkee · 10 WCA Medals</div>
+            <div>IIT Roorkee</div>
+            <div>{wca.medals.total} WCA Medals</div>
           </div>
         </div>
       </section>
 
       <!-- Hand-drawn Editorial Squiggle Divider -->
-      <div class="flex items-center gap-4 text-[var(--accent)]/75 pt-2">
+      <div class="flex items-center gap-4 text-[var(--accent)]/80 pt-2">
         <svg width="108" height="10" viewBox="0 0 108 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="shrink-0">
           <path
             d="M1 5.5C9 1.5 16 9.5 24 5.5C32 1.5 39 9.5 47 5.5C55 1.5 62 9.5 70 5.5C78 1.5 85 9.5 93 5.5C100 2 104 7 107 5"
@@ -133,7 +105,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             stroke-linecap="round"
           />
         </svg>
-        <span class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
+        <span class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
           Career Dispatch · 2012–2026
         </span>
       </div>
@@ -142,8 +114,8 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
       <section id="experience" class="space-y-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-0">
           <article class="space-y-2 md:pr-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile">
-            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--accent)]">
-              Now · Jul 2026 –
+            <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent)]">
+              Jul 2026 – Present
             </div>
             <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">Google</h2>
             <p class="text-[14px] leading-[1.6] text-[var(--fg-muted)]">
@@ -152,7 +124,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           </article>
 
           <article class="space-y-2 md:px-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile">
-            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--fg-subtle)]">
+            <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">
               7 Years · 2019 – 2026
             </div>
             <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">Amazon &amp; AWS</h2>
@@ -164,7 +136,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           </article>
 
           <article class="space-y-2 md:pl-7">
-            <div class="font-mono text-[10.5px] uppercase tracking-[0.15em] text-[var(--fg-subtle)]">
+            <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">
               Foundations · 2012 – 2019
             </div>
             <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">GS · Citi · IITR</h2>
@@ -176,13 +148,13 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           </article>
         </div>
 
-        <!-- Expandable Full Role Ledger (Zero visual clutter at rest; complete detail on demand) -->
+        <!-- Expandable Full Role Ledger (Clear accordion disclosure affordance) -->
         <details class="group rule-dotted-t pt-5">
-          <summary class="inline-flex items-center gap-2 py-1 font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors cursor-pointer select-none">
+          <summary class="inline-flex items-center gap-2 py-1.5 font-mono text-xs text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors cursor-pointer select-none">
             <span class="underline decoration-[var(--border-strong)] underline-offset-4 group-hover:decoration-[var(--accent)]">
-              Read full role history &amp; research (2012–2026)
+              Expand full role history &amp; research (2012–2026)
             </span>
-            <span class="inline-block transition-transform duration-200 group-open:rotate-180" aria-hidden="true">↓</span>
+            <span class="inline-block transition-transform duration-200 group-open:rotate-180" aria-hidden="true">▾</span>
           </summary>
 
           <div class="mt-6 divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
@@ -191,7 +163,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                 <div class="py-5 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
                   <div class="md:col-span-3 space-y-0.5">
                     <div class="font-mono text-[11px] text-[var(--fg-subtle)]">{item.period}</div>
-                    <div class="font-mono text-[11px] text-[var(--fg-subtle)]/80">{item.location}</div>
+                    <div class="font-mono text-[11px] text-[var(--fg-subtle)]">{item.location}</div>
                   </div>
                   <div class="md:col-span-9 space-y-2.5">
                     <div class="flex flex-wrap items-baseline gap-x-2">
@@ -228,7 +200,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             <div class="py-5 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6">
               <div class="md:col-span-3 space-y-0.5">
                 <div class="font-mono text-[11px] text-[var(--fg-subtle)]">{EDUCATION.period}</div>
-                <div class="font-mono text-[11px] text-[var(--fg-subtle)]/80">Roorkee · Windsor · Pune</div>
+                <div class="font-mono text-[11px] text-[var(--fg-subtle)]">Roorkee · Windsor · Pune</div>
               </div>
               <div class="md:col-span-9 space-y-1.5">
                 <div class="flex flex-wrap items-baseline gap-x-2">
@@ -244,43 +216,52 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
     </div>
 
     <!-- =================================================================== -->
-    <!-- CHAPTER II: DEEP ESPRESSO EDITORIAL CHAPTER (Every.to contrast flip)-->
+    <!-- CHAPTER II: DEEP ESPRESSO EDITORIAL CHAPTER (3-Act contrast band)   -->
     <!-- =================================================================== -->
     <section
       id="work"
-      class="bg-[var(--chapter-bg)] text-[var(--chapter-fg)] rule-chapter-t rule-chapter-b"
+      class="chapter-band bg-[var(--chapter-bg)] text-[var(--chapter-fg)] rule-chapter-t rule-chapter-b"
     >
       <div class="max-w-5xl mx-auto px-5 sm:px-10 py-14 sm:py-16 space-y-8">
-        <!-- Chapter Masthead & Editorial Filter Tabs -->
+        <!-- Chapter Masthead & Accessible Filter Tabs -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 rule-chapter-b pb-5">
           <div class="space-y-1.5">
-            <div class="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--chapter-accent)]">
-              Index · Open Source, Writing &amp; Weekend Builds
+            <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--chapter-accent)]">
+              Index · Open Source &amp; Builds
             </div>
             <h2 class="font-editorial font-normal text-3xl sm:text-[42px] leading-[1.05] tracking-[-0.025em] text-[var(--chapter-fg)]">
               Things shipped in the <em class="italic text-[var(--chapter-accent)]">open</em>.
             </h2>
           </div>
 
-          <div class="flex items-center gap-5 text-xs font-mono">
+          <div role="tablist" aria-label="Filter projects by category" class="flex items-center gap-5 text-xs font-mono">
             <button
               type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="workNewspaper"
               data-work-tab="all"
-              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer"
+              class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer"
             >
               All
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="workOssCol"
               data-work-tab="oss"
-              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
+              class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
             >
               Open Source
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="workAppCol"
               data-work-tab="app"
-              class="work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
+              class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
             >
               Live Apps
             </button>
@@ -298,12 +279,12 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             {
               FEATURED_OSS.map((feat) => (
                 <article class="py-6 space-y-4">
-                  <div class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--chapter-accent)]">
+                  <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--chapter-accent)]">
                     {feat.eyebrow}
                   </div>
 
                   <h3 class="font-editorial font-normal text-[28px] sm:text-[32px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
-                    {feat.title} <em class="italic text-[#d8cfc2]">{feat.titleAccent}</em> {feat.titleTail}
+                    {feat.title} <em class="italic text-[#dfd6c9]">{feat.titleAccent}</em> {feat.titleTail}
                   </h3>
 
                   <p class="text-[14px] leading-[1.66] text-[var(--chapter-muted)]">
@@ -311,23 +292,24 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                   </p>
 
                   {feat.hasCodeSpecimen && (
-                    <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-[11.5px] leading-relaxed text-[#d6cfc3] overflow-x-auto"><code><span class="text-[#948a7e]">// aws/aws-cdk PR #12436 · StepFunctions</span>
-<span class="text-[var(--chapter-accent)]">new</span> tasks.EcsRunTask(this, <span class="text-[#d4a373]">'RunJob'</span>, &#123;
+                    <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-[11.5px] leading-relaxed text-[#dfd8cd] overflow-x-auto"><code><span class="text-[#a3998c]">// aws/aws-cdk PR #12436 · StepFunctions</span>
+<span class="text-[var(--chapter-accent)]">new</span> tasks.EcsRunTask(this, <span class="text-[#e0ae78]">'RunJob'</span>, &#123;
   taskDefinition,
-  revisionNumber: <span class="text-[#e8c584]">Revision.LATEST</span>,
+  revisionNumber: <span class="text-[#f0cf90]">Revision.LATEST</span>,
 &#125;);</code></pre>
                   )}
 
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1 font-mono text-xs">
+                  <!-- Inline Editorial Arrows (no marooned right-edge gaps) -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-1 font-mono text-xs">
                     {feat.links.map((item) => (
                       <a
                         href={item.url}
                         target="_blank"
                         rel="noopener"
-                        class="inline-flex items-center justify-between gap-2 py-1 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
+                        class="inline-flex items-baseline gap-1.5 py-1.5 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
                       >
-                        <span class="truncate">{item.label}</span>
-                        <span class="shrink-0">↗</span>
+                        <span>{item.label}</span>
+                        <span class="shrink-0" aria-hidden="true">↗</span>
                       </a>
                     ))}
                   </div>
@@ -336,35 +318,38 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             }
           </div>
 
-          <!-- Secondary Dispatch Column: Live Weekend Web Apps -->
+          <!-- Secondary Dispatch Column: Live Weekend Web Apps (Natural top-aligned rhythm, zero dead voids) -->
           <div
             id="workAppCol"
             data-work-kind="app"
-            class="md:col-span-5 md:pl-9 divide-y divide-dotted divide-[var(--chapter-rule)] flex flex-col justify-between"
+            class="md:col-span-5 md:pl-9 divide-y divide-dotted divide-[var(--chapter-rule)] flex flex-col justify-start self-start"
           >
             {
               LIVE_APPS.map((app) => (
-                <article class="py-6 first:pt-6 last:pb-6 space-y-2 group">
-                  <div class="flex items-baseline justify-between gap-3">
-                    <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--chapter-subtle)]">
+                <article class="py-6 space-y-2.5 group">
+                  <div class="flex flex-wrap items-baseline justify-between gap-2">
+                    <span class="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--chapter-subtle)]">
                       {app.badge}
                     </span>
-                    <div class="flex items-center gap-3 font-mono text-[11px]">
+                    <div class="flex items-center gap-2 font-mono text-xs">
                       {app.repoUrl && (
-                        <a
-                          href={app.repoUrl}
-                          target="_blank"
-                          rel="noopener"
-                          class="text-[var(--chapter-subtle)] hover:text-[var(--chapter-fg)] transition-colors"
-                        >
-                          Source
-                        </a>
+                        <>
+                          <a
+                            href={app.repoUrl}
+                            target="_blank"
+                            rel="noopener"
+                            class="py-1 text-[var(--chapter-muted)] hover:text-[var(--chapter-fg)] transition-colors"
+                          >
+                            Source
+                          </a>
+                          <span class="text-[var(--chapter-rule)]" aria-hidden="true">·</span>
+                        </>
                       )}
                       <a
                         href={app.url}
                         target="_blank"
                         rel="noopener"
-                        class="text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
+                        class="py-1 text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
                       >
                         Open ↗
                       </a>
@@ -398,7 +383,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
     <!-- =================================================================== -->
     <WcaSection wca={wca} />
 
-    <!-- Optional Writing Preview (auto-renders once non-draft posts exist) -->
+    <!-- Optional Writing Preview (auto-renders once local MDX essays exist) -->
     {
       publishedPosts.length > 0 && (
         <section id="writing" class="max-w-5xl mx-auto px-5 sm:px-10 pb-14 space-y-5">
@@ -425,7 +410,6 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                     {post.data.publishedAt.toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
-                      day: 'numeric',
                     })}
                   </time>
                 </a>
@@ -437,86 +421,29 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
     }
   </main>
 
-  <!-- =================================================================== -->
-  <!-- EDITORIAL COLOPHON FOOTER                                           -->
-  <!-- =================================================================== -->
-  <footer id="contact" class="max-w-5xl w-full mx-auto px-5 sm:px-10 pb-10">
-    <div class="rule-dotted-t pt-8 space-y-5">
-      <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
-        <div class="space-y-1">
-          <div class="font-editorial text-xl text-[var(--fg)]">{PROFILE.name}</div>
-          <p class="font-mono text-[11px] text-[var(--fg-subtle)]">
-            Colophon — Newsreader, Inter &amp; JetBrains Mono · Built with Astro · {PROFILE.location}
-          </p>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-[var(--fg-muted)] md:shrink-0">
-          <a href={`mailto:${PROFILE.email}`} class="editorial-link text-[var(--fg)]">
-            {PROFILE.email}
-          </a>
-          <a href={PROFILE.links.github} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
-            GitHub
-          </a>
-          <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
-            LinkedIn
-          </a>
-          <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
-            WCA
-          </a>
-          <a href="/writing" class="hover:text-[var(--accent)] transition-colors">
-            Writing
-          </a>
-          <a href="/rss.xml" class="hover:text-[var(--accent)] transition-colors">
-            RSS
-          </a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
+  <SiteFooter />
   <CommandPalette />
 </BaseLayout>
 
 <script>
-  // Live Bengaluru IST clock in masthead
-  const clockEl = document.getElementById('blrClock');
-  function updateBlrClock() {
-    if (!clockEl) return;
-    try {
-      const formatted = new Intl.DateTimeFormat('en-IN', {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      }).format(new Date());
-      clockEl.textContent = `BLR · ${formatted} IST`;
-    } catch {
-      // Fallback stays static
-    }
-  }
-  updateBlrClock();
-  setInterval(updateBlrClock, 30000);
-
-  // Copy email button
+  // Honest Copy Email button (with timeout clear + global toast fallback)
   const copyBtn = document.getElementById('copyEmailBtn') as HTMLButtonElement | null;
   const copyLabel = document.getElementById('copyEmailLabel');
+  let copyTimer: number | null = null;
 
   copyBtn?.addEventListener('click', async () => {
-    const email = copyBtn.dataset.email ?? 'hi@ayush987goyal.dev';
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch {
-      // Clipboard fallback ignored gracefully
-    }
-    if (copyLabel) {
-      copyLabel.textContent = `Copied ${email} ✓`;
-      setTimeout(() => {
-        copyLabel.textContent = email;
-      }, 2000);
+    const fn = (window as unknown as { __ayushCopyEmail?: () => Promise<boolean> }).__ayushCopyEmail;
+    const ok = fn ? await fn() : false;
+    if (ok && copyLabel) {
+      copyLabel.textContent = 'copied ✓';
+      if (copyTimer) window.clearTimeout(copyTimer);
+      copyTimer = window.setTimeout(() => {
+        copyLabel.textContent = 'copy';
+      }, 2200);
     }
   });
 
-  // Work section editorial filter tabs
+  // Work section accessible filter tabs
   const workTabs = document.querySelectorAll<HTMLButtonElement>('.work-tab');
   const ossCol = document.getElementById('workOssCol');
   const appCol = document.getElementById('workAppCol');
@@ -525,11 +452,12 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
     btn.addEventListener('click', () => {
       const target = btn.dataset.workTab;
       workTabs.forEach((b) => {
-        b.className =
-          'work-tab py-1.5 min-h-[36px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer';
+        const active = b === btn;
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+        b.className = active
+          ? 'work-tab py-1.5 min-h-[38px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer'
+          : 'work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer';
       });
-      btn.className =
-        'work-tab py-1.5 min-h-[36px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer';
 
       if (ossCol && appCol) {
         const showOss = target === 'all' || target === 'oss';
@@ -537,7 +465,6 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         ossCol.classList.toggle('hidden', !showOss);
         appCol.classList.toggle('hidden', !showApp);
 
-        // Expand active single column cleanly when filtered
         ossCol.classList.toggle('md:col-span-12', target === 'oss');
         ossCol.classList.toggle('md:col-span-7', target !== 'oss');
         ossCol.classList.toggle('rule-chapter-r-md', target !== 'oss');

@@ -130,7 +130,7 @@ export const EDUCATION = {
 
 export const FEATURED_OSS: FeaturedOssItem[] = [
   {
-    eyebrow: 'Featured · AWS Machine Learning Blog · Aug 2025',
+    eyebrow: 'AWS ML Blog · Aug 2025',
     title: 'Bedrock Data Automation',
     titleAccent: 'MCP Server',
     titleTail: '& AWS ML Blog',
@@ -148,7 +148,7 @@ export const FEATURED_OSS: FeaturedOssItem[] = [
     ],
   },
   {
-    eyebrow: 'Featured · AWS DevOps Blog · Feb 2021',
+    eyebrow: 'AWS DevOps Blog · Feb 2021',
     title: 'AWS CDK',
     titleAccent: 'EcsRunTask',
     titleTail: '& Construct Hub',
@@ -180,7 +180,7 @@ export const PUBLISHED_WRITING: PublishedWritingItem[] = [
   {
     title: 'Whiteboard to cloud in minutes using Amazon Q, Amazon Bedrock Data Automation, and Model Context Protocol',
     venue: 'AWS Machine Learning Blog',
-    date: 'Aug 14, 2025',
+    date: 'Aug 2025',
     url: 'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
     summary:
       'Co-authored technical guide demonstrating how to pair Amazon Q Developer with the AWSLabs Bedrock Data Automation MCP server to turn whiteboard architecture sketches into deployed AWS infrastructure.',

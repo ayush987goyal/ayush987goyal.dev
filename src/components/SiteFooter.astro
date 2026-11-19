@@ -1,0 +1,37 @@
+---
+import { PROFILE } from '../data/profile';
+---
+
+<footer id="contact" class="max-w-5xl w-full mx-auto px-5 sm:px-10 pb-10">
+  <div class="rule-dotted-t pt-8">
+    <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-5">
+      <div class="space-y-1">
+        <div class="font-editorial text-xl text-[var(--fg)]">{PROFILE.name}</div>
+        <p class="font-mono text-[11px] text-[var(--fg-subtle)]">
+          Newsreader, Inter &amp; JetBrains Mono · Built with Astro · {PROFILE.location}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[var(--fg-muted)] md:shrink-0">
+        <a href={`mailto:${PROFILE.email}`} class="editorial-link py-1.5 text-[var(--fg)]">
+          {PROFILE.email}
+        </a>
+        <a href={PROFILE.links.github} target="_blank" rel="noopener" class="py-1.5 hover:text-[var(--accent)] transition-colors">
+          GitHub
+        </a>
+        <a href={PROFILE.links.linkedin} target="_blank" rel="noopener" class="py-1.5 hover:text-[var(--accent)] transition-colors">
+          LinkedIn
+        </a>
+        <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="py-1.5 hover:text-[var(--accent)] transition-colors">
+          WCA
+        </a>
+        <a href="/writing" class="py-1.5 hover:text-[var(--accent)] transition-colors">
+          Writing
+        </a>
+        <a href="/rss.xml" class="py-1.5 hover:text-[var(--accent)] transition-colors">
+          RSS
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

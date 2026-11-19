@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ThemeToggle from '../../components/ThemeToggle.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import CommandPalette from '../../components/CommandPalette.astro';
 import { PROFILE, PUBLISHED_WRITING } from '../../data/profile';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
@@ -9,43 +11,43 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout title={`Writing — ${PROFILE.name}`} description={`Published articles and technical notes by ${PROFILE.name}.`}>
-  <header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/90 backdrop-blur-md">
-    <div class="max-w-3xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-      <a href="/" class="font-editorial text-[17px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors">
-        ← {PROFILE.domain}
-      </a>
-      <ThemeToggle />
-    </div>
-  </header>
+<BaseLayout
+  title={`Writing — ${PROFILE.name}`}
+  description={`Published articles and technical writing by ${PROFILE.name}.`}
+>
+  <SiteHeader active="writing" />
 
-  <main class="flex-1 max-w-3xl w-full mx-auto px-5 sm:px-8 py-12 space-y-12">
-    <div class="space-y-2 rule-dotted-b pb-5">
-      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">Published &amp; Notes</div>
-      <h1 class="font-editorial font-normal text-4xl sm:text-5xl tracking-[-0.025em] text-[var(--fg)]">Writing</h1>
-      <p class="text-[15px] text-[var(--fg-muted)] leading-relaxed">
-        Technical articles, AWS blog publications, and occasional notes on full-stack architecture, cloud infrastructure, and AI systems.
+  <main id="main-content" class="flex-1 max-w-5xl w-full mx-auto px-5 sm:px-10 py-12 sm:py-16 space-y-12">
+    <div class="max-w-3xl space-y-3 rule-dotted-b pb-6">
+      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">
+        Published &amp; Engineering Notes
+      </div>
+      <h1 class="font-editorial font-normal text-4xl sm:text-5xl tracking-[-0.025em] text-[var(--fg)]">
+        Writing
+      </h1>
+      <p class="text-[15.5px] text-[var(--fg-muted)] leading-relaxed">
+        Official AWS blog publications and technical notes on full-stack architecture, cloud infrastructure, and AI developer tooling.
       </p>
     </div>
 
     <!-- Official / External Publications -->
-    <section class="space-y-4">
+    <section class="max-w-3xl space-y-4">
       <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
-        Published Elsewhere
+        Published Articles
       </div>
       <ul class="divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
         {
           PUBLISHED_WRITING.map((item) => (
-            <li class="py-5">
+            <li class="py-6">
               <a href={item.url} target="_blank" rel="noopener" class="block group space-y-2">
                 <div class="flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em]">
                   <span class="text-[var(--accent)]">{item.venue}</span>
                   <span class="text-[var(--fg-subtle)]">{item.date} · External ↗</span>
                 </div>
-                <h2 class="font-editorial font-normal text-2xl leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                <h2 class="font-editorial font-normal text-2xl sm:text-[26px] leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
                   {item.title}
                 </h2>
-                <p class="text-[14px] text-[var(--fg-muted)] leading-relaxed">{item.summary}</p>
+                <p class="text-[14.5px] text-[var(--fg-muted)] leading-relaxed">{item.summary}</p>
               </a>
             </li>
           ))
@@ -53,17 +55,13 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
       </ul>
     </section>
 
-    <!-- Local Notes & Essays -->
-    <section class="space-y-4">
-      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
-        Notes &amp; Dispatches
-      </div>
-      {
-        posts.length === 0 ? (
-          <p class="font-editorial italic text-[15px] text-[var(--fg-subtle)]">
-            Long-form essays and architecture notes coming soon.
-          </p>
-        ) : (
+    <!-- Local Notes & Dispatches (renders once local posts exist) -->
+    {
+      posts.length > 0 && (
+        <section class="max-w-3xl space-y-4">
+          <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
+            Notes &amp; Dispatches
+          </div>
           <ul class="divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
             {posts.map((post) => (
               <li class="py-5">
@@ -79,7 +77,6 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
                       {post.data.publishedAt.toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
-                        day: 'numeric',
                       })}
                     </time>
                   </div>
@@ -88,8 +85,11 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
               </li>
             ))}
           </ul>
-        )
-      }
-    </section>
+        </section>
+      )
+    }
   </main>
+
+  <SiteFooter />
+  <CommandPalette />
 </BaseLayout>
