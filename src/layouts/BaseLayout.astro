@@ -14,7 +14,7 @@ interface Props {
 
 const {
   title = `${PROFILE.name} — Staff Software Engineer`,
-  description = PROFILE.bio,
+  description = PROFILE.metaDescription,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);

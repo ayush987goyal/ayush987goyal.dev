@@ -28,7 +28,7 @@ import { PROFILE } from '../data/profile';
         id="cmdCloseBtn"
         type="button"
         aria-label="Close navigation menu"
-        class="font-mono text-[10px] px-2 py-1 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer shrink-0"
+        class="font-mono text-xs px-2 py-1 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer shrink-0"
       >
         ESC
       </button>
@@ -98,7 +98,7 @@ import { PROFILE } from '../data/profile';
     { label: 'Open Source & Weekend Builds', hint: '#work', action: () => goSection('#work') },
     { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => goSection('#cubing') },
     { label: 'Writing & AWS Publications', hint: '/writing', action: () => (window.location.href = '/writing') },
-    { label: 'Colophon & Connect', hint: '#contact', action: () => goSection('#contact') },
+    { label: 'Contact & Colophon', hint: '#contact', action: () => goSection('#contact') },
     {
       label: 'AWS ML Blog: Bedrock & MCP (2025)',
       hint: 'External ↗',
@@ -154,7 +154,7 @@ import { PROFILE } from '../data/profile';
           ? 'bg-[var(--surface)] text-[var(--fg)]'
           : 'text-[var(--fg-muted)] hover:bg-[var(--surface)] hover:text-[var(--fg)]'
       }`;
-      btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-[11px] text-[var(--fg-subtle)]">${cmd.hint}</span>`;
+      btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-xs text-[var(--fg-subtle)]">${cmd.hint}</span>`;
       btn.addEventListener('click', () => {
         close();
         cmd.action();

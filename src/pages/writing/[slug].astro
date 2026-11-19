@@ -34,7 +34,7 @@ const { Content } = await render(post);
         <header class="space-y-2.5 rule-dotted-b pb-6">
           <time
             datetime={post.data.publishedAt.toISOString()}
-            class="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent)]"
+            class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--accent)]"
           >
             {
               post.data.publishedAt.toLocaleDateString('en-US', {
