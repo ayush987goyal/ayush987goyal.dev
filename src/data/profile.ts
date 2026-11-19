@@ -24,6 +24,24 @@ export interface WorkItem {
   meta: string;
 }
 
+export interface FeaturedOssItem {
+  eyebrow: string;
+  title: string;
+  titleAccent: string;
+  titleTail: string;
+  description: string;
+  links: { label: string; url: string }[];
+  hasCodeSpecimen?: boolean;
+}
+
+export interface PublishedWritingItem {
+  title: string;
+  venue: string;
+  date: string;
+  url: string;
+  summary: string;
+}
+
 export const PROFILE = {
   name: 'Ayush Goyal',
   role: 'Staff Software Engineer at Google',
@@ -65,13 +83,15 @@ export const EXPERIENCE: ExperienceItem[] = [
         title: 'Senior Front End Engineer',
         team: 'AWS Bedrock',
         period: 'Jul 2022 – Sep 2025',
-        summary: 'Architected and shipped generative AI developer consoles and workflows at AWS scale.',
+        summary:
+          'Designed and scaled AI developer consoles and workflows for Amazon Bedrock Data Automation; authored the AWSLabs Bedrock Data Automation MCP server and co-authored the AWS Machine Learning Blog walkthrough.',
       },
       {
         title: 'Front End Engineer II',
         team: 'AWS AI Computer Vision',
         period: 'Apr 2021 – Jul 2022',
-        summary: 'Built AWS Computer Vision console experiences. Recipient of the AWS Computer Vision 2023 re:Invent Award.',
+        summary:
+          'Built AWS Computer Vision console and Face Liveness developer experiences (Amplify UI). Recipient of the AWS Computer Vision 2023 re:Invent Award.',
       },
       {
         title: 'Front End Engineer II',
@@ -108,32 +128,72 @@ export const EDUCATION = {
     'B.S. Varshney Memorial Award. Research assistantships on gas hydrates and CO₂ capture at University of Windsor (Canada) and National Chemical Laboratory (Pune); published on gas hydrate potential in India.',
 } as const;
 
-export const LEAD_OSS = {
-  eyebrow: 'Featured · AWS DevOps Blog',
-  title: 'AWS CDK',
-  titleAccent: 'EcsRunTask',
-  titleTail: '& Construct Hub',
-  description:
-    'Authored aws/aws-cdk PR #12436 adding task-definition family & revision support to StepFunctions EcsRunTask — highlighted in the official AWS DevOps Blog (CDK Corner, Feb 2021) — contributed to cdklabs/cdk-monitoring-constructs, and published reusable TypeScript constructs on Construct Hub.',
-  links: [
-    {
-      label: 'AWS DevOps Blog (CDK Corner)',
-      url: 'https://aws.amazon.com/blogs/devops/cdk-corner-february-2021/',
-    },
-    {
-      label: 'verdaccio-service-construct',
-      url: 'https://constructs.dev/packages/verdaccio-service-construct',
-    },
-    {
-      label: 'umami-analytics-construct',
-      url: 'https://constructs.dev/packages/umami-analytics-construct',
-    },
-    {
-      label: 'cdk-monitoring-constructs',
-      url: 'https://github.com/cdklabs/cdk-monitoring-constructs',
-    },
-  ],
-} as const;
+export const FEATURED_OSS: FeaturedOssItem[] = [
+  {
+    eyebrow: 'Featured · AWS Machine Learning Blog · Aug 2025',
+    title: 'Bedrock Data Automation',
+    titleAccent: 'MCP Server',
+    titleTail: '& AWS ML Blog',
+    description:
+      'Authored the official AWSLabs Model Context Protocol (MCP) server for Amazon Bedrock Data Automation — exposing multimodal document, image, audio, and video extraction as callable agent tools — and co-authored the AWS ML Blog walkthrough with Amazon Q.',
+    links: [
+      {
+        label: 'AWS ML Blog (Aug 2025)',
+        url: 'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
+      },
+      {
+        label: 'awslabs MCP package (PyPI)',
+        url: 'https://pypi.org/project/awslabs.aws-bedrock-data-automation-mcp-server/',
+      },
+    ],
+  },
+  {
+    eyebrow: 'Featured · AWS DevOps Blog · Feb 2021',
+    title: 'AWS CDK',
+    titleAccent: 'EcsRunTask',
+    titleTail: '& Construct Hub',
+    description:
+      'Authored aws/aws-cdk PR #12436 adding task-definition family & revision support to StepFunctions EcsRunTask — highlighted in the AWS DevOps Blog (CDK Corner) — contributed to cdklabs/cdk-monitoring-constructs, and published TypeScript constructs on Construct Hub.',
+    hasCodeSpecimen: true,
+    links: [
+      {
+        label: 'AWS DevOps Blog (CDK Corner)',
+        url: 'https://aws.amazon.com/blogs/devops/cdk-corner-february-2021/',
+      },
+      {
+        label: 'verdaccio-service-construct',
+        url: 'https://constructs.dev/packages/verdaccio-service-construct',
+      },
+      {
+        label: 'umami-analytics-construct',
+        url: 'https://constructs.dev/packages/umami-analytics-construct',
+      },
+      {
+        label: 'cdk-monitoring-constructs',
+        url: 'https://github.com/cdklabs/cdk-monitoring-constructs',
+      },
+    ],
+  },
+];
+
+export const PUBLISHED_WRITING: PublishedWritingItem[] = [
+  {
+    title: 'Whiteboard to cloud in minutes using Amazon Q, Amazon Bedrock Data Automation, and Model Context Protocol',
+    venue: 'AWS Machine Learning Blog',
+    date: 'Aug 14, 2025',
+    url: 'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
+    summary:
+      'Co-authored technical guide demonstrating how to pair Amazon Q Developer with the AWSLabs Bedrock Data Automation MCP server to turn whiteboard architecture sketches into deployed AWS infrastructure.',
+  },
+  {
+    title: 'CDK Corner — February 2021 (Featured Contributor: aws/aws-cdk PR #12436)',
+    venue: 'AWS DevOps Blog',
+    date: 'Feb 2021',
+    url: 'https://aws.amazon.com/blogs/devops/cdk-corner-february-2021/',
+    summary:
+      'Featured by the AWS CDK team for adding task-definition family and revision number support to StepFunctions EcsRunTask.',
+  },
+];
 
 export const LIVE_APPS: WorkItem[] = [
   {

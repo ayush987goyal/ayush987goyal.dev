@@ -30,9 +30,20 @@ import { PROFILE } from '../data/profile';
 <script define:vars={{ profile: PROFILE }}>
   const COMMANDS = [
     { label: 'Career Dispatch', hint: '#experience', action: () => (window.location.hash = '#experience') },
-    { label: 'Open Source & Live Apps', hint: '#work', action: () => (window.location.hash = '#work') },
+    { label: 'Open Source, Writing & Live Apps', hint: '#work', action: () => (window.location.hash = '#work') },
     { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => (window.location.hash = '#cubing') },
+    { label: 'Writing & AWS Publications', hint: '/writing', action: () => (window.location.href = '/writing') },
     { label: 'Colophon & Connect', hint: '#contact', action: () => (window.location.hash = '#contact') },
+    {
+      label: 'AWS ML Blog: Bedrock & MCP (2025)',
+      hint: 'External ↗',
+      action: () =>
+        window.open(
+          'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
+          '_blank',
+          'noopener'
+        ),
+    },
     {
       label: `Copy Email (${profile.email})`,
       hint: 'Clipboard',

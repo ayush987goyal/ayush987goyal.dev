@@ -2,14 +2,14 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ThemeToggle from '../../components/ThemeToggle.astro';
-import { PROFILE } from '../../data/profile';
+import { PROFILE, PUBLISHED_WRITING } from '../../data/profile';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
 );
 ---
 
-<BaseLayout title={`Writing — ${PROFILE.name}`} description={`Notes and essays by ${PROFILE.name}.`}>
+<BaseLayout title={`Writing — ${PROFILE.name}`} description={`Published articles and technical notes by ${PROFILE.name}.`}>
   <header class="sticky top-0 z-40 rule-dotted-b bg-[var(--bg)]/90 backdrop-blur-md">
     <div class="max-w-3xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
       <a href="/" class="font-editorial text-[17px] tracking-tight text-[var(--fg)] hover:text-[var(--accent)] transition-colors">
@@ -19,46 +19,77 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
     </div>
   </header>
 
-  <main class="flex-1 max-w-3xl w-full mx-auto px-5 sm:px-8 py-12 space-y-8">
+  <main class="flex-1 max-w-3xl w-full mx-auto px-5 sm:px-8 py-12 space-y-12">
     <div class="space-y-2 rule-dotted-b pb-5">
-      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">Notes &amp; Essays</div>
+      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent)]">Published &amp; Notes</div>
       <h1 class="font-editorial font-normal text-4xl sm:text-5xl tracking-[-0.025em] text-[var(--fg)]">Writing</h1>
       <p class="text-[15px] text-[var(--fg-muted)] leading-relaxed">
-        Occasional notes on full-stack architecture, cloud infrastructure, and speedcubing.
+        Technical articles, AWS blog publications, and occasional notes on full-stack architecture, cloud infrastructure, and AI systems.
       </p>
     </div>
 
-    {
-      posts.length === 0 ? (
-        <p class="text-sm text-[var(--fg-subtle)] font-mono">
-          No published notes yet. Add a markdown or MDX file in <code>src/content/writing/</code> to publish here.
-        </p>
-      ) : (
-        <ul class="divide-y divide-dotted divide-[var(--border-dotted)]">
-          {posts.map((post) => (
-            <li class="py-5 first:pt-0">
-              <a href={`/writing/${post.id}`} class="block group space-y-1.5">
-                <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                  <h2 class="font-editorial text-2xl text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
-                    {post.data.title}
-                  </h2>
-                  <time
-                    datetime={post.data.publishedAt.toISOString()}
-                    class="font-mono text-xs text-[var(--fg-subtle)] shrink-0"
-                  >
-                    {post.data.publishedAt.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </time>
+    <!-- Official / External Publications -->
+    <section class="space-y-4">
+      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
+        Published Elsewhere
+      </div>
+      <ul class="divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
+        {
+          PUBLISHED_WRITING.map((item) => (
+            <li class="py-5">
+              <a href={item.url} target="_blank" rel="noopener" class="block group space-y-2">
+                <div class="flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+                  <span class="text-[var(--accent)]">{item.venue}</span>
+                  <span class="text-[var(--fg-subtle)]">{item.date} · External ↗</span>
                 </div>
-                <p class="text-sm text-[var(--fg-muted)] leading-relaxed">{post.data.description}</p>
+                <h2 class="font-editorial font-normal text-2xl leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                  {item.title}
+                </h2>
+                <p class="text-[14px] text-[var(--fg-muted)] leading-relaxed">{item.summary}</p>
               </a>
             </li>
-          ))}
-        </ul>
-      )
-    }
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Local Notes & Essays -->
+    <section class="space-y-4">
+      <div class="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
+        Notes &amp; Dispatches
+      </div>
+      {
+        posts.length === 0 ? (
+          <p class="font-editorial italic text-[15px] text-[var(--fg-subtle)]">
+            Long-form essays and architecture notes coming soon.
+          </p>
+        ) : (
+          <ul class="divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
+            {posts.map((post) => (
+              <li class="py-5">
+                <a href={`/writing/${post.id}`} class="block group space-y-1.5">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <h2 class="font-editorial font-normal text-2xl text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                      {post.data.title}
+                    </h2>
+                    <time
+                      datetime={post.data.publishedAt.toISOString()}
+                      class="font-mono text-xs text-[var(--fg-subtle)] shrink-0"
+                    >
+                      {post.data.publishedAt.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  </div>
+                  <p class="text-sm text-[var(--fg-muted)] leading-relaxed">{post.data.description}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
   </main>
 </BaseLayout>

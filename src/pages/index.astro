@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import WcaSection from '../components/WcaSection.astro';
-import { EDUCATION, EXPERIENCE, LEAD_OSS, LIVE_APPS, PROFILE } from '../data/profile';
+import { EDUCATION, EXPERIENCE, FEATURED_OSS, LIVE_APPS, PROFILE } from '../data/profile';
 import { getWcaProfile } from '../lib/wca';
 
 const wca = await getWcaProfile(PROFILE.wcaId);
@@ -34,13 +34,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         <a href="#experience" class="hover:text-[var(--fg)] transition-colors">Career</a>
         <a href="#work" class="hover:text-[var(--fg)] transition-colors">Work</a>
         <a href="#cubing" class="hover:text-[var(--fg)] transition-colors">Cubing</a>
-        {
-          publishedPosts.length > 0 && (
-            <a href="/writing" class="hover:text-[var(--fg)] transition-colors">
-              Writing
-            </a>
-          )
-        }
+        <a href="/writing" class="hover:text-[var(--fg)] transition-colors">Writing</a>
         <a href="#contact" class="hover:text-[var(--fg)] transition-colors">Colophon</a>
       </nav>
 
@@ -164,8 +158,8 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">Amazon &amp; AWS</h2>
             <p class="text-[14px] leading-[1.6] text-[var(--fg-muted)]">
               Senior SDE at <strong class="font-medium text-[var(--fg)]">Pharmacy</strong>; Senior FEE on
-              <strong class="font-medium text-[var(--fg)]"> AWS Bedrock</strong> &amp;
-              <strong class="font-medium text-[var(--fg)]"> AI Computer Vision</strong> (2023 re:Invent Award); early AWS CDK pioneer.
+              <strong class="font-medium text-[var(--fg)]"> AWS Bedrock</strong> (Data Automation &amp; MCP) &amp;
+              <strong class="font-medium text-[var(--fg)]"> AI Computer Vision</strong> (2023 re:Invent Award).
             </p>
           </article>
 
@@ -261,7 +255,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 rule-chapter-b pb-5">
           <div class="space-y-1.5">
             <div class="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--chapter-accent)]">
-              Index · Open Source &amp; Weekend Builds
+              Index · Open Source, Writing &amp; Weekend Builds
             </div>
             <h2 class="font-editorial font-normal text-3xl sm:text-[42px] leading-[1.05] tracking-[-0.025em] text-[var(--chapter-fg)]">
               Things shipped in the <em class="italic text-[var(--chapter-accent)]">open</em>.
@@ -295,48 +289,52 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
 
         <!-- Asymmetric Newspaper Dotted Grid -->
         <div id="workNewspaper" class="grid grid-cols-1 md:grid-cols-12 gap-0 rule-chapter-b">
-          <!-- Lead Feature: AWS CDK & Construct Hub -->
-          <article
+          <!-- Lead Features: AWSLabs Bedrock MCP (2025) & AWS CDK (2021) -->
+          <div
             id="workOssCol"
             data-work-kind="oss"
-            class="md:col-span-7 py-6 md:pr-9 rule-chapter-r-md rule-chapter-b-mobile space-y-5"
+            class="md:col-span-7 md:pr-9 rule-chapter-r-md rule-chapter-b-mobile divide-y divide-dotted divide-[var(--chapter-rule)]"
           >
-            <div class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--chapter-accent)]">
-              {LEAD_OSS.eyebrow}
-            </div>
+            {
+              FEATURED_OSS.map((feat) => (
+                <article class="py-6 space-y-4">
+                  <div class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--chapter-accent)]">
+                    {feat.eyebrow}
+                  </div>
 
-            <h3 class="font-editorial font-normal text-3xl sm:text-[34px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
-              {LEAD_OSS.title} <em class="italic text-[#d8cfc2]">{LEAD_OSS.titleAccent}</em> {LEAD_OSS.titleTail}
-            </h3>
+                  <h3 class="font-editorial font-normal text-[28px] sm:text-[32px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
+                    {feat.title} <em class="italic text-[#d8cfc2]">{feat.titleAccent}</em> {feat.titleTail}
+                  </h3>
 
-            <p class="text-[14.5px] leading-[1.68] text-[var(--chapter-muted)]">
-              {LEAD_OSS.description}
-            </p>
+                  <p class="text-[14px] leading-[1.66] text-[var(--chapter-muted)]">
+                    {feat.description}
+                  </p>
 
-            <!-- Quiet Code Specimen -->
-            <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-[11.5px] leading-relaxed text-[#d6cfc3] overflow-x-auto"><code><span class="text-[#948a7e]">// aws/aws-cdk PR #12436 · StepFunctions</span>
+                  {feat.hasCodeSpecimen && (
+                    <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-[11.5px] leading-relaxed text-[#d6cfc3] overflow-x-auto"><code><span class="text-[#948a7e]">// aws/aws-cdk PR #12436 · StepFunctions</span>
 <span class="text-[var(--chapter-accent)]">new</span> tasks.EcsRunTask(this, <span class="text-[#d4a373]">'RunJob'</span>, &#123;
   taskDefinition,
   revisionNumber: <span class="text-[#e8c584]">Revision.LATEST</span>,
 &#125;);</code></pre>
+                  )}
 
-            <!-- Direct Editorial Links -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-1 font-mono text-xs">
-              {
-                LEAD_OSS.links.map((item) => (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener"
-                    class="inline-flex items-center justify-between gap-2 py-1 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
-                  >
-                    <span class="truncate">{item.label}</span>
-                    <span class="shrink-0">↗</span>
-                  </a>
-                ))
-              }
-            </div>
-          </article>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1 font-mono text-xs">
+                    {feat.links.map((item) => (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener"
+                        class="inline-flex items-center justify-between gap-2 py-1 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
+                      >
+                        <span class="truncate">{item.label}</span>
+                        <span class="shrink-0">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
 
           <!-- Secondary Dispatch Column: Live Weekend Web Apps -->
           <div
@@ -444,15 +442,15 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
   <!-- =================================================================== -->
   <footer id="contact" class="max-w-5xl w-full mx-auto px-5 sm:px-10 pb-10">
     <div class="rule-dotted-t pt-8 space-y-5">
-      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+      <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
         <div class="space-y-1">
           <div class="font-editorial text-xl text-[var(--fg)]">{PROFILE.name}</div>
           <p class="font-mono text-[11px] text-[var(--fg-subtle)]">
-            Colophon — Set in Newsreader, Inter &amp; JetBrains Mono · Built with Astro · {PROFILE.location}
+            Colophon — Newsreader, Inter &amp; JetBrains Mono · Built with Astro · {PROFILE.location}
           </p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-[var(--fg-muted)]">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-[var(--fg-muted)] md:shrink-0">
           <a href={`mailto:${PROFILE.email}`} class="editorial-link text-[var(--fg)]">
             {PROFILE.email}
           </a>
@@ -464,6 +462,9 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           </a>
           <a href={PROFILE.links.wca} target="_blank" rel="noopener" class="hover:text-[var(--accent)] transition-colors">
             WCA
+          </a>
+          <a href="/writing" class="hover:text-[var(--accent)] transition-colors">
+            Writing
           </a>
           <a href="/rss.xml" class="hover:text-[var(--accent)] transition-colors">
             RSS
@@ -539,7 +540,9 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         // Expand active single column cleanly when filtered
         ossCol.classList.toggle('md:col-span-12', target === 'oss');
         ossCol.classList.toggle('md:col-span-7', target !== 'oss');
-        ossCol.classList.toggle('md:border-r-0', target === 'oss');
+        ossCol.classList.toggle('rule-chapter-r-md', target !== 'oss');
+        ossCol.classList.toggle('md:pr-0', target === 'oss');
+        ossCol.classList.toggle('md:pr-9', target !== 'oss');
         appCol.classList.toggle('md:col-span-12', target === 'app');
         appCol.classList.toggle('md:col-span-5', target !== 'app');
         appCol.classList.toggle('md:pl-0', target === 'app');
