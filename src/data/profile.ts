@@ -163,6 +163,7 @@ export const LIVE_APPS: WorkItem[] = [
     description:
       'Clean bid-and-trick scorekeeper for the classic Indian card game — built for zero-login, mobile-first tabletop sessions.',
     url: 'https://v0-judgement-score-taker.vercel.app',
+    repoUrl: 'https://github.com/ayush987goyal/judgement-score-taker',
     meta: 'TypeScript · Live App',
   },
 ];
