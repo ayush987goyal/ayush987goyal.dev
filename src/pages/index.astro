@@ -12,6 +12,7 @@ import {
   FEATURED_OSS,
   LIVE_APPS,
   PROFILE,
+  UPSTREAM_OSS,
 } from '../data/profile';
 import { getWcaProfile } from '../lib/wca';
 
@@ -43,23 +44,30 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           <p class="text-[16px] sm:text-[17px] leading-[1.64] text-[var(--fg-muted)] max-w-[62ch]">
             I'm <strong class="font-medium text-[var(--fg)]">{PROFILE.name}</strong>, a Staff Software Engineer at
             <strong class="font-medium text-[var(--fg)]"> Google</strong>. Over{' '}
-            <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — including seven at Amazon as cross-team technical lead across 10–25 engineers on AWS Bedrock, Q Business, and Rekognition — I've launched GA multimodal AI platforms, real-time ML inference pipelines, and authored the{' '}
+            <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — including seven at Amazon as cross-team technical lead across 10–25 engineers on AWS Bedrock, Q Business, and Rekognition — I've launched GA multimodal AI platforms, real-time ML inference pipelines,{' '}
             <a
-              href={PROFILE.links.awsMcpPyPi}
+              href={PROFILE.links.awsMcpPrs}
               target="_blank"
               rel="noopener"
               class="editorial-link text-[var(--fg)]"
             >
-              AWSLabs Bedrock MCP server ↗
-            </a>{' '}
-            and{' '}
+              two official AWSLabs MCP servers ↗
+            </a>,{' '}
+            <a
+              href={PROFILE.links.awsCdkPrs}
+              target="_blank"
+              rel="noopener"
+              class="editorial-link text-[var(--fg)]"
+            >
+              46 merged AWS CDK PRs ↗
+            </a>, and an{' '}
             <a
               href={PROFILE.links.awsMlBlog}
               target="_blank"
               rel="noopener"
               class="editorial-link text-[var(--fg)]"
             >
-              AWS ML Blog ↗
+              AWS ML Blog walkthrough ↗
             </a>.
           </p>
 
@@ -283,65 +291,108 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         </div>
 
         <div id="workContainer" class="space-y-9">
-          <!-- Primary Tier: Balanced 2-Column Flagship Open Source & AWS Publications -->
-          <div
-            id="workOssSection"
-            class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 rule-chapter-b pb-9"
-          >
-            {
-              FEATURED_OSS.map((feat, idx) => (
-                <article
-                  class:list={[
-                    'space-y-4 flex flex-col justify-between',
-                    idx === 0 && 'md:pr-9 rule-chapter-r-md pb-8 md:pb-0 rule-chapter-b-mobile',
-                    idx === 1 && 'md:pl-9',
-                  ]}
-                >
-                  <div class="space-y-3.5">
-                    <div class="font-mono text-xs uppercase tracking-[0.12em] text-[var(--chapter-accent)]">
-                      {feat.eyebrow}
-                    </div>
+          <!-- Primary Tier: Balanced 2-Column Flagship Open Source + 3-Column Upstream Strip -->
+          <div id="workOssSection" class="space-y-9 rule-chapter-b pb-9">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 rule-chapter-b pb-9">
+              {
+                FEATURED_OSS.map((feat, idx) => (
+                  <article
+                    class:list={[
+                      'space-y-4 flex flex-col justify-between',
+                      idx === 0 && 'md:pr-9 rule-chapter-r-md pb-8 md:pb-0 rule-chapter-b-mobile',
+                      idx === 1 && 'md:pl-9',
+                    ]}
+                  >
+                    <div class="space-y-3.5">
+                      <div class="font-mono text-xs uppercase tracking-[0.12em] text-[var(--chapter-accent)]">
+                        {feat.eyebrow}
+                      </div>
 
-                    <h3 class="font-editorial font-normal text-[28px] sm:text-[32px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
-                      {feat.title} <em class="italic text-[#dfd6c9]">{feat.titleAccent}</em> {feat.titleTail}
-                    </h3>
+                      <h3 class="font-editorial font-normal text-[28px] sm:text-[32px] leading-[1.1] tracking-[-0.02em] text-[var(--chapter-fg)]">
+                        {feat.title} <em class="italic text-[#dfd6c9]">{feat.titleAccent}</em> {feat.titleTail}
+                      </h3>
 
-                    <p class="text-[14px] leading-[1.66] text-[var(--chapter-muted)]">
-                      {feat.description}
-                    </p>
+                      <p class="text-[14px] leading-[1.66] text-[var(--chapter-muted)]">
+                        {feat.description}
+                      </p>
 
-                    {feat.specLine && (
                       <div class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-3.5 py-2.5 font-mono text-xs text-[#dfd8cd]">
                         {feat.specLine}
                       </div>
-                    )}
+                    </div>
 
-                    {feat.hasCodeSpecimen && (
-                      <pre class="bg-[var(--chapter-surface)] border border-[var(--chapter-rule)] px-4 py-3 font-mono text-xs leading-relaxed text-[#dfd8cd] overflow-x-auto"><code><span class="text-[#a99f92]">// aws/aws-cdk PR #12436 · StepFunctions</span>
-<span class="text-[var(--chapter-accent)]">new</span> tasks.EcsRunTask(this, <span class="text-[#e0ae78]">'RunJob'</span>, &#123;
-  taskDefinition,
-  revisionNumber: <span class="text-[#f0cf90]">Revision.LATEST</span>,
-&#125;);</code></pre>
-                    )}
-                  </div>
+                    <!-- Inline Editorial Arrows -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 pt-2 font-mono text-xs">
+                      {feat.links.map((item) => (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener"
+                          class="inline-flex items-baseline gap-1.5 py-1.5 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
+                        >
+                          <span>{item.label}</span>
+                          <span class="shrink-0" aria-hidden="true">↗</span>
+                        </a>
+                      ))}
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
 
-                  <!-- Inline Editorial Arrows -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 pt-2 font-mono text-xs">
-                    {feat.links.map((item) => (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener"
-                        class="inline-flex items-baseline gap-1.5 py-1.5 text-[var(--chapter-accent)] border-b border-dotted border-[var(--chapter-rule)] hover:text-[var(--chapter-fg)] hover:border-[var(--chapter-accent)] transition-colors"
-                      >
-                        <span>{item.label}</span>
-                        <span class="shrink-0" aria-hidden="true">↗</span>
-                      </a>
-                    ))}
-                  </div>
-                </article>
-              ))
-            }
+            <!-- Selected Upstream OSS Contributions -->
+            <div class="space-y-5">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <div class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--chapter-accent)]">
+                  Upstream Open Source · 92 Merged External PRs
+                </div>
+                <div class="font-mono text-xs text-[var(--chapter-subtle)]">
+                  Core AWS SDKs, React &amp; Vue ecosystems
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-0">
+                {
+                  UPSTREAM_OSS.map((item, idx) => (
+                    <article
+                      class:list={[
+                        'space-y-2',
+                        idx === 0 && 'md:pr-7 rule-chapter-r-md pb-6 md:pb-0 rule-chapter-b-mobile',
+                        idx === 1 && 'md:px-7 rule-chapter-r-md pb-6 md:pb-0 rule-chapter-b-mobile',
+                        idx === 2 && 'md:pl-7',
+                      ]}
+                    >
+                      <div class="flex flex-wrap items-baseline justify-between gap-2">
+                        <span class="font-mono text-xs text-[var(--chapter-subtle)]">{item.stats}</span>
+                        <div class="flex items-center gap-2 font-mono text-xs">
+                          {item.links.map((link, lIdx) => (
+                            <>
+                              {lIdx > 0 && <span class="text-[var(--chapter-rule)]" aria-hidden="true">·</span>}
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener"
+                                class="py-0.5 text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
+                              >
+                                {link.label} ↗
+                              </a>
+                            </>
+                          ))}
+                        </div>
+                      </div>
+
+                      <h3 class="font-editorial font-normal text-[21px] leading-snug text-[var(--chapter-fg)]">
+                        {item.repo}
+                      </h3>
+
+                      <p class="text-[13.5px] leading-[1.58] text-[var(--chapter-muted)]">
+                        {item.description}
+                      </p>
+                    </article>
+                  ))
+                }
+              </div>
+            </div>
           </div>
 
           <!-- Secondary Tier: Compact 3-Column Weekend Builds Strip -->

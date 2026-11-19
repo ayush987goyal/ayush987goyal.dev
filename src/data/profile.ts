@@ -29,9 +29,15 @@ export interface FeaturedOssItem {
   titleAccent: string;
   titleTail: string;
   description: string;
-  specLine?: string;
+  specLine: string;
   links: { label: string; url: string }[];
-  hasCodeSpecimen?: boolean;
+}
+
+export interface UpstreamOssItem {
+  repo: string;
+  stats: string;
+  description: string;
+  links: { label: string; url: string }[];
 }
 
 export interface PublishedWritingItem {
@@ -52,8 +58,8 @@ export const PROFILE = {
   fallbackEmail: 'ayush987goyal@gmail.com',
   wcaId: '2014GOYA01',
   metaDescription:
-    'Ayush Goyal — Staff Software Engineer at Google. Formerly AWS Bedrock, Q Business, and Rekognition Face Liveness. Author of the AWSLabs BDA MCP server.',
-  bio: "Staff Software Engineer at Google in Bengaluru. Over 10+ years across Amazon (AWS Bedrock, Q Business, Rekognition, Pharmacy), Goldman Sachs, and Citibank, I've led 10–25 engineer teams shipping multimodal GenAI platforms, real-time ML inference pipelines, and open-source AWS developer tools.",
+    'Ayush Goyal — Staff Software Engineer at Google. Formerly AWS Bedrock, Q Business & Rekognition. Author of AWSLabs MCP servers & 46 merged AWS CDK PRs.',
+  bio: "Staff Software Engineer at Google in Bengaluru. Over 10+ years across Amazon (AWS Bedrock, Q Business, Rekognition, Pharmacy), Goldman Sachs, and Citibank, I've served as cross-team technical lead across 10–25 engineers shipping multimodal GenAI platforms, real-time ML inference pipelines, two official AWSLabs MCP servers, and 46 merged AWS CDK PRs.",
   links: {
     github: 'https://github.com/ayush987goyal',
     linkedin: 'https://www.linkedin.com/in/ayush987goyal/',
@@ -61,6 +67,9 @@ export const PROFILE = {
     awsMlBlog:
       'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
     awsMcpPyPi: 'https://pypi.org/project/awslabs.aws-bedrock-data-automation-mcp-server/',
+    awsRekognitionMcpPyPi: 'https://pypi.org/project/awslabs.amazon-rekognition-mcp-server/',
+    awsMcpPrs: 'https://github.com/awslabs/mcp/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+    awsCdkPrs: 'https://github.com/aws/aws-cdk/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
   },
 } as const;
 
@@ -84,7 +93,7 @@ export const AMAZON_TENURE = {
       period: '2024 – 2025',
       metric: 'Extraction F1 0.37 → 0.71 · 3 LLM families',
       summary:
-        'Drove the GA launch transforming unstructured documents, images, audio, and video into structured insights; built the console, blueprint optimization, and prompt evaluation framework across 3 LLM families (including Claude and Amazon Nova), lifting extraction accuracy (F1) from 0.37 → 0.71. Authored the official AWSLabs MCP server (8+ API ops, 6+ industry use cases) and published the AWS Machine Learning Blog walkthrough.',
+        'Drove the GA launch transforming unstructured documents, images, audio, and video into structured insights; built the console, blueprint optimization, and prompt evaluation framework across 3 LLM families (including Claude and Amazon Nova), lifting extraction accuracy (F1) from 0.37 → 0.71. Authored official AWSLabs MCP servers for Bedrock & Rekognition and published the AWS ML Blog walkthrough.',
     },
     {
       product: 'Amazon Q Business Custom Plugins',
@@ -139,35 +148,47 @@ export const EARLY_FOUNDATIONS: FoundationItem[] = [
 
 export const FEATURED_OSS: FeaturedOssItem[] = [
   {
-    eyebrow: 'AWS ML Blog · Aug 2025',
-    title: 'Bedrock Data Automation',
-    titleAccent: 'MCP Server',
-    titleTail: '& AWS ML Blog',
+    eyebrow: 'AWSLabs MCP · 2 Official PyPI Servers',
+    title: 'AWSLabs',
+    titleAccent: 'MCP Servers',
+    titleTail: '— Bedrock & Rekognition',
     description:
-      'Authored the official AWSLabs Model Context Protocol (MCP) server for Amazon Bedrock Data Automation — exposing multimodal document, image, audio, and video extraction as callable agent tools — and co-authored the AWS Machine Learning Blog walkthrough with Amazon Q.',
-    specLine: 'TypeScript & Python · 8+ API operations · 6+ industry use cases',
+      'Authored two official AWSLabs Model Context Protocol (MCP) servers — exposing Amazon Bedrock Data Automation (multimodal document, image, audio, and video extraction) and Amazon Rekognition (image, face, and moderation analysis) as callable agent tools — plus the AWS ML Blog walkthrough with Amazon Q.',
+    specLine: 'awslabs/mcp #472 & #612 · Python & TypeScript · 2 official PyPI packages',
     links: [
       {
         label: 'AWS ML Blog (Aug 2025)',
         url: 'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
       },
       {
-        label: 'awslabs MCP package (PyPI)',
+        label: 'Bedrock MCP (PyPI)',
         url: 'https://pypi.org/project/awslabs.aws-bedrock-data-automation-mcp-server/',
+      },
+      {
+        label: 'Rekognition MCP (PyPI)',
+        url: 'https://pypi.org/project/awslabs.amazon-rekognition-mcp-server/',
+      },
+      {
+        label: 'awslabs/mcp PRs',
+        url: 'https://github.com/awslabs/mcp/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
       },
     ],
   },
   {
-    eyebrow: 'AWS DevOps Blog · Feb 2021',
+    eyebrow: 'AWS CDK · 46 Merged PRs',
     title: 'AWS CDK',
-    titleAccent: 'EcsRunTask',
+    titleAccent: 'Core Contributor',
     titleTail: '& Construct Hub',
     description:
-      'Authored aws/aws-cdk PR #12436 adding task-definition family & revision support to StepFunctions EcsRunTask — highlighted in the AWS DevOps Blog (CDK Corner) — contributed to cdklabs/cdk-monitoring-constructs, and published TypeScript constructs on Construct Hub.',
-    hasCodeSpecimen: true,
+      'Shipped 46 merged PRs to aws/aws-cdk — including Lambda Function URLs (#19817), API Gateway v2 WebSocket APIs (#13031), CloudFront Response Headers Policy (#17359), Route 53 Cross-Account DNS Delegations (#12680), and StepFunctions CallApiGateway (#13033) — plus AWS DevOps Blog recognition and published TypeScript constructs.',
+    specLine: '46 merged aws/aws-cdk PRs · Lambda, API Gateway, CloudFront & Route 53',
     links: [
       {
-        label: 'AWS DevOps Blog (Feb 2021)',
+        label: '46 Merged CDK PRs',
+        url: 'https://github.com/aws/aws-cdk/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+      },
+      {
+        label: 'AWS DevOps Blog',
         url: 'https://aws.amazon.com/blogs/devops/cdk-corner-february-2021/',
       },
       {
@@ -178,9 +199,48 @@ export const FEATURED_OSS: FeaturedOssItem[] = [
         label: 'umami-analytics-construct',
         url: 'https://constructs.dev/packages/umami-analytics-construct',
       },
+    ],
+  },
+];
+
+export const UPSTREAM_OSS: UpstreamOssItem[] = [
+  {
+    repo: 'aws-amplify/amplify-ui',
+    stats: '11 merged PRs',
+    description:
+      'Face Liveness React SDK (@aws-amplify/ui-react-liveness) camera/streaming updates and shared UI hooks (useControllable, useThemeBreakpoint).',
+    links: [
       {
-        label: 'cdk-monitoring-constructs',
-        url: 'https://github.com/cdklabs/cdk-monitoring-constructs',
+        label: 'PRs',
+        url: 'https://github.com/aws-amplify/amplify-ui/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+      },
+    ],
+  },
+  {
+    repo: 'streamich/react-use',
+    stats: '7 merged PRs · ★44k',
+    description:
+      'Authored useCookie, useMethods, useError, and custom serializer/deserializer support for useLocalStorage.',
+    links: [
+      {
+        label: 'PRs',
+        url: 'https://github.com/streamich/react-use/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+      },
+    ],
+  },
+  {
+    repo: 'cdklabs & vuejs/core',
+    stats: '9 PRs · ★55k',
+    description:
+      'Authored CDK Aspects scope monitoring in cdk-monitoring-constructs (#34) and compiler/runtime optimizations in Vue 3 core.',
+    links: [
+      {
+        label: 'CDK',
+        url: 'https://github.com/cdklabs/cdk-monitoring-constructs/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+      },
+      {
+        label: 'Vue',
+        url: 'https://github.com/vuejs/core/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
       },
     ],
   },
