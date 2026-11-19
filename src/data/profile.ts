@@ -69,8 +69,6 @@ export const CURRENT_ROLE = {
   location: 'Bengaluru',
   period: 'Jul 2026 – Present',
   title: 'Staff Software Engineer',
-  summary:
-    'Technical leadership and full-stack systems architecture in Bengaluru.',
 } as const;
 
 export const AMAZON_TENURE = {
@@ -79,28 +77,28 @@ export const AMAZON_TENURE = {
   period: 'Jun 2019 – Jul 2026 · 7 yrs',
   progression: 'FEE II → Senior FEE → Senior SDE',
   scope:
-    'Delivered AI/ML platforms across Amazon Bedrock, Q Business, and Rekognition while leading 10–25 engineers across concurrent launches, then expanded backend ownership at Amazon Pharmacy.',
+    'Delivered AI/ML platforms across Amazon Bedrock, Q Business, and Rekognition as cross-team technical lead across 10–25 engineers on concurrent launches, then expanded backend ownership at Amazon Pharmacy.',
   highlights: [
     {
       product: 'Amazon Bedrock Data Automation & MCP',
       period: '2024 – 2025',
-      metric: 'F1 0.37 → 0.71 · 3 LLM families',
+      metric: 'Extraction F1 0.37 → 0.71 · 3 LLM families',
       summary:
-        'Drove the GA launch transforming unstructured documents, images, audio, and video into structured insights; built the console, blueprint optimization, and prompt evaluation framework across Claude, Nova Pro, and LVT5. Authored the official AWSLabs MCP server (8+ API ops, 6+ industry use cases) and published the AWS Machine Learning Blog walkthrough.',
+        'Drove the GA launch transforming unstructured documents, images, audio, and video into structured insights; built the console, blueprint optimization, and prompt evaluation framework across 3 LLM families (including Claude and Amazon Nova), lifting extraction accuracy (F1) from 0.37 → 0.71. Authored the official AWSLabs MCP server (8+ API ops, 6+ industry use cases) and published the AWS Machine Learning Blog walkthrough.',
     },
     {
       product: 'Amazon Q Business Custom Plugins',
       period: '2023 – 2024',
       metric: '100+ developers enabled',
       summary:
-        'Led launch of managed enterprise AI agent tool plugins — owning API design and plugin architecture across Q Business, Bedrock Agents, and AI CV Services orgs, plus distributed CI/CD and personal stacks that unblocked Q Business GA.',
+        'Led launch of managed enterprise AI agent tool plugins — owning API design and plugin architecture across Q Business, Bedrock Agents, and AI CV Services orgs, plus distributed CI/CD and per-developer deployment environments that unblocked Q Business GA.',
     },
     {
       product: 'Amazon Rekognition Face Liveness',
       period: '2021 – 2023',
-      metric: '−40% latency · 2× 2023 AWS Awards',
+      metric: '−40% inference latency · 2× 2023 AWS Awards',
       summary:
-        'Led end-to-end delivery (frontend, SDK, streaming infrastructure) for real-time spoof and deepfake detection across AI, Security, and Amplify orgs. Integrated TritonServer ML inference (40% latency reduction Light, 22% NoLight) and built the demographic fairness evaluation framework adopted as org standard. Awarded AWS AIML Town Hall & re:Invent Computer Vision Awards.',
+        'Led end-to-end delivery (frontend, SDK, streaming infrastructure) for real-time spoof and deepfake detection across AI, Security, and Amplify orgs. Integrated TritonServer ML inference (cutting latency by up to 40%) and built the demographic fairness evaluation framework adopted as org standard. Awarded AWS AIML Town Hall & re:Invent Computer Vision Awards.',
     },
     {
       product: 'Amazon Pharmacy & CS Tech',

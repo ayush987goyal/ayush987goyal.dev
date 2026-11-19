@@ -43,7 +43,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           <p class="text-[16px] sm:text-[17px] leading-[1.64] text-[var(--fg-muted)] max-w-[62ch]">
             I'm <strong class="font-medium text-[var(--fg)]">{PROFILE.name}</strong>, a Staff Software Engineer at
             <strong class="font-medium text-[var(--fg)]"> Google</strong>. Over{' '}
-            <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — including seven at Amazon leading 10–25 engineers across AWS Bedrock, Q Business, and Rekognition — I've launched GA multimodal AI platforms, real-time ML inference pipelines, and authored the{' '}
+            <span class="editorial-mark font-medium text-[var(--fg)]">10+ years</span> — including seven at Amazon as cross-team technical lead across 10–25 engineers on AWS Bedrock, Q Business, and Rekognition — I've launched GA multimodal AI platforms, real-time ML inference pipelines, and authored the{' '}
             <a
               href={PROFILE.links.awsMcpPyPi}
               target="_blank"
@@ -141,14 +141,14 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
       <!-- Unified, Zero-Duplication Career Ledger -->
       <section id="experience" class="space-y-0">
         <!-- Row 1: Google (Current) -->
-        <article class="pb-7 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 rule-dotted-b">
+        <article class="pb-6 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 items-baseline rule-dotted-b">
           <div class="md:col-span-3 space-y-0.5">
             <div class="font-mono text-xs uppercase tracking-[0.1em] text-[var(--accent)]">
               {CURRENT_ROLE.period}
             </div>
             <div class="font-mono text-xs text-[var(--fg-subtle)]">{CURRENT_ROLE.location}</div>
           </div>
-          <div class="md:col-span-9 space-y-1.5">
+          <div class="md:col-span-9">
             <div class="flex flex-wrap items-baseline gap-x-2.5">
               <h2 class="font-editorial font-normal text-[28px] leading-tight text-[var(--fg)]">
                 {CURRENT_ROLE.company}
@@ -157,9 +157,6 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                 — {CURRENT_ROLE.title}
               </span>
             </div>
-            <p class="text-[14.5px] leading-[1.64] text-[var(--fg-muted)] max-w-[66ch]">
-              {CURRENT_ROLE.summary}
-            </p>
           </div>
         </article>
 
