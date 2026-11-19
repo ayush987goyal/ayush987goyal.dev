@@ -66,6 +66,7 @@ html.dark {
     color: var(--fg);
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color-scheme: light;
@@ -91,6 +92,12 @@ html.dark {
   [tabindex="0"]:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  .chapter-band a:focus-visible,
+  .chapter-band button:focus-visible,
+  .chapter-band [tabindex="0"]:focus-visible {
+    outline-color: var(--chapter-accent);
   }
 }
 

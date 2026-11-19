@@ -38,7 +38,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
           </p>
 
           <h1 class="font-editorial font-normal text-[38px] sm:text-[54px] lg:text-[62px] leading-[1.01] tracking-[-0.03em] text-[var(--fg)]">
-            Shipping <em class="italic">production AI</em>,{' '}<br class="hidden sm:inline" />from inference pipelines{' '}<br class="hidden sm:inline" />to developer platforms.
+            Shipping <em class="italic pr-[0.05em]">production AI</em>,{' '}<br class="hidden sm:inline" />from inference pipelines{' '}<br class="hidden sm:inline" />to developer platforms.
           </h1>
 
           <p class="text-[16px] sm:text-[17px] leading-[1.64] text-[var(--fg-muted)] max-w-[62ch]">
@@ -50,25 +50,19 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
               target="_blank"
               rel="noopener"
               class="editorial-link text-[var(--fg)]"
-            >
-              two official AWSLabs MCP servers ↗
-            </a>,{' '}
+            >two official AWSLabs MCP servers ↗</a>,{' '}
             <a
               href={PROFILE.links.awsCdkPrs}
               target="_blank"
               rel="noopener"
               class="editorial-link text-[var(--fg)]"
-            >
-              46 merged AWS CDK PRs ↗
-            </a>, and an{' '}
+            >46 merged AWS CDK PRs ↗</a>, and an{' '}
             <a
               href={PROFILE.links.awsMlBlog}
               target="_blank"
               rel="noopener"
               class="editorial-link text-[var(--fg)]"
-            >
-              AWS ML Blog walkthrough ↗
-            </a>.
+            >AWS ML Blog walkthrough ↗</a>.
           </p>
 
           <!-- Hairline Underlined Action Links (Generous mobile touch targets) -->
@@ -84,7 +78,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                 id="copyEmailBtn"
                 type="button"
                 aria-label={`Copy ${PROFILE.email} to clipboard`}
-                class="font-mono text-xs px-2 py-0.5 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
+                class="inline-flex items-center min-h-[28px] font-mono text-xs px-2.5 py-1 border border-[var(--border)] text-[var(--fg-subtle)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-colors cursor-pointer"
               >
                 <span id="copyEmailLabel">copy</span>
               </button>
@@ -170,11 +164,11 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
 
         <!-- Row 2: Amazon & AWS (7 Years · Selected Launches & Measured Impact) -->
         <article class="py-7 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 rule-dotted-b">
-          <div class="md:col-span-3 space-y-0.5">
+          <div class="md:col-span-3 md:pt-1.5 space-y-0.5">
             <div class="font-mono text-xs uppercase tracking-[0.08em] text-[var(--fg-subtle)]">
               {AMAZON_TENURE.period}
             </div>
-            <div class="font-mono text-xs text-[var(--fg-subtle)]">{AMAZON_TENURE.location}</div>
+            <div class="font-mono text-xs text-[var(--fg-subtle)]">{AMAZON_TENURE.duration}</div>
           </div>
 
           <div class="md:col-span-9 space-y-5">
@@ -198,6 +192,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                   <div class="border-l border-dotted border-[var(--border-dotted)] pl-4 space-y-1">
                     <div class="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
                       <h3 class="text-[14.5px] font-medium text-[var(--fg)]">{item.product}</h3>
+                      <span class="font-mono text-xs text-[var(--fg-subtle)] shrink-0">{item.period}</span>
                     </div>
                     {item.metric && (
                       <div class="font-mono text-xs text-[var(--accent)]">{item.metric}</div>
@@ -211,28 +206,33 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
         </article>
 
         <!-- Row 3: Earlier Foundations (3-Column Print Strip — Goldman Sachs, Citibank, IIT Roorkee) -->
-        <div class="pt-7 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-0">
-          {
-            EARLY_FOUNDATIONS.map((item, idx) => (
-              <article
-                class:list={[
-                  'space-y-1.5',
-                  idx === 0 && 'md:pr-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile',
-                  idx === 1 && 'md:px-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile',
-                  idx === 2 && 'md:pl-7',
-                ]}
-              >
-                <div class="font-mono text-xs text-[var(--fg-subtle)]">{item.period}</div>
-                <div class="flex flex-wrap items-baseline gap-x-2">
-                  <h3 class="font-editorial font-normal text-[23px] leading-tight text-[var(--fg)]">
-                    {item.org}
-                  </h3>
-                </div>
-                <div class="font-mono text-xs text-[var(--accent)]">{item.role}</div>
-                <p class="text-[13.5px] leading-[1.6] text-[var(--fg-muted)]">{item.summary}</p>
-              </article>
-            ))
-          }
+        <div class="pt-7">
+          <h2 class="sr-only">Earlier Foundations &amp; Education</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-0">
+            {
+              EARLY_FOUNDATIONS.map((item, idx) => (
+                <article
+                  class:list={[
+                    'space-y-1.5',
+                    idx === 0 && 'md:pr-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile',
+                    idx === 1 && 'md:px-7 rule-dotted-r-md pb-6 md:pb-0 rule-dotted-b-mobile',
+                    idx === 2 && 'md:pl-7',
+                  ]}
+                >
+                  <div class="font-mono text-xs uppercase tracking-[0.08em] text-[var(--fg-subtle)]">
+                    {item.period}
+                  </div>
+                  <div class="flex flex-wrap items-baseline gap-x-2">
+                    <h3 class="font-editorial font-normal text-[23px] leading-tight text-[var(--fg)]">
+                      {item.org}
+                    </h3>
+                  </div>
+                  <div class="font-mono text-xs text-[var(--accent)]">{item.role}</div>
+                  <p class="text-[13.5px] leading-[1.6] text-[var(--fg-muted)]">{item.summary}</p>
+                </article>
+              ))
+            }
+          </div>
         </div>
       </section>
     </div>
@@ -245,7 +245,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
       class="chapter-band bg-[var(--chapter-bg)] text-[var(--chapter-fg)] rule-chapter-t rule-chapter-b"
     >
       <div class="max-w-5xl mx-auto px-5 sm:px-10 py-14 sm:py-16 space-y-9">
-        <!-- Chapter Masthead & Accessible Filter Tabs -->
+        <!-- Chapter Masthead & Semantic Filter Group -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 rule-chapter-b pb-5">
           <div class="space-y-1.5">
             <div class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--chapter-accent)]">
@@ -256,12 +256,10 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             </h2>
           </div>
 
-          <div role="tablist" aria-label="Filter projects by category" class="flex items-center gap-5 text-xs font-mono">
+          <div role="group" aria-label="Filter projects by category" class="flex items-center gap-5 text-xs font-mono">
             <button
               type="button"
-              role="tab"
-              aria-selected="true"
-              aria-controls="workContainer"
+              aria-pressed="true"
               data-work-tab="all"
               class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer"
             >
@@ -269,9 +267,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             </button>
             <button
               type="button"
-              role="tab"
-              aria-selected="false"
-              aria-controls="workOssSection"
+              aria-pressed="false"
               data-work-tab="oss"
               class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
             >
@@ -279,9 +275,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             </button>
             <button
               type="button"
-              role="tab"
-              aria-selected="false"
-              aria-controls="workAppSection"
+              aria-pressed="false"
               data-work-tab="app"
               class="work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer"
             >
@@ -344,10 +338,16 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
             <div class="space-y-5">
               <div class="flex flex-wrap items-baseline justify-between gap-2">
                 <div class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--chapter-accent)]">
-                  Upstream Open Source · 92 Merged External PRs
+                  Upstream Open Source ·{' '}
+                  <a
+                    href={PROFILE.links.allExternalPrs}
+                    target="_blank"
+                    rel="noopener"
+                    class="underline decoration-[var(--chapter-rule)] underline-offset-4 hover:text-[var(--chapter-fg)] hover:decoration-[var(--chapter-accent)] transition-colors"
+                  >92 Merged External PRs ↗</a>
                 </div>
                 <div class="font-mono text-xs text-[var(--chapter-subtle)]">
-                  Core AWS SDKs, React &amp; Vue ecosystems
+                  Selected highlights across AWS SDKs, React &amp; Vue
                 </div>
               </div>
 
@@ -372,6 +372,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                                 href={link.url}
                                 target="_blank"
                                 rel="noopener"
+                                aria-label={`View merged ${link.label} pull requests for ${item.repo}`}
                                 class="py-0.5 text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
                               >
                                 {link.label} ↗
@@ -429,6 +430,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                                 href={app.repoUrl}
                                 target="_blank"
                                 rel="noopener"
+                                aria-label={`View source code for ${app.title}`}
                                 class="py-0.5 text-[var(--chapter-muted)] hover:text-[var(--chapter-fg)] transition-colors"
                               >
                                 Source
@@ -440,6 +442,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                             href={app.url}
                             target="_blank"
                             rel="noopener"
+                            aria-label={`Open ${app.title} live app`}
                             class="py-0.5 text-[var(--chapter-accent)] hover:text-[var(--chapter-fg)] transition-colors"
                           >
                             Open ↗
@@ -448,14 +451,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
                       </div>
 
                       <h3 class="font-editorial font-normal text-[21px] leading-snug text-[var(--chapter-fg)]">
-                        <a
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener"
-                          class="hover:text-[var(--chapter-accent)] transition-colors"
-                        >
-                          {app.title}
-                        </a>
+                        {app.title}
                       </h3>
 
                       <p class="text-[13.5px] leading-[1.58] text-[var(--chapter-muted)]">
@@ -536,7 +532,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
     }
   });
 
-  // Work section accessible filter tabs (2-tier layout)
+  // Work section accessible filter buttons (role="group" + aria-pressed)
   const workTabs = document.querySelectorAll<HTMLButtonElement>('.work-tab');
   const ossSection = document.getElementById('workOssSection');
   const appSection = document.getElementById('workAppSection');
@@ -546,7 +542,7 @@ const publishedPosts = (await getCollection('writing', ({ data }) => !data.draft
       const target = btn.dataset.workTab;
       workTabs.forEach((b) => {
         const active = b === btn;
-        b.setAttribute('aria-selected', active ? 'true' : 'false');
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
         b.className = active
           ? 'work-tab py-1.5 min-h-[38px] text-[var(--chapter-fg)] border-b-2 border-[var(--chapter-accent)] font-medium transition-colors cursor-pointer'
           : 'work-tab py-1.5 min-h-[38px] text-[var(--chapter-subtle)] border-b-2 border-transparent hover:text-[var(--chapter-fg)] transition-colors cursor-pointer';

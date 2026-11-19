@@ -49,7 +49,9 @@ const cube444 = byId.get('444');
     <div class="md:col-span-5 flex items-center justify-start md:justify-end gap-5">
       <RubiksCube />
       <div class="font-mono text-xs text-[var(--fg-subtle)] space-y-1.5 border-l border-dotted border-[var(--border-dotted)] pl-4 tabular-nums">
-        <div class="text-[var(--fg)] font-medium uppercase tracking-[0.06em]">WCA API · Live</div>
+        <div class="text-[var(--fg)] font-medium uppercase tracking-[0.06em]">
+          {wca.source === 'live' ? 'WCA · Official PBs' : 'WCA · Verified PBs'}
+        </div>
         <div>3×3 · <span class="text-[var(--fg)]">{cube333?.single ?? '10.86s'}</span></div>
         <div>FMC · <span class="text-[var(--fg)]">{fmc?.single ?? '38 moves'}</span></div>
         <div>3BLD · <span class="text-[var(--fg)]">{bld?.single ?? '2:24.70'}</span></div>
@@ -102,6 +104,7 @@ const cube444 = byId.get('444');
           id="wcaTabHighlights"
           type="button"
           role="tab"
+          tabindex="0"
           aria-selected="true"
           aria-controls="wcaPanelHighlights"
           data-wca-tab="highlights"
@@ -113,6 +116,7 @@ const cube444 = byId.get('444');
           id="wcaTabAll"
           type="button"
           role="tab"
+          tabindex="-1"
           aria-selected="false"
           aria-controls="wcaPanelAll"
           data-wca-tab="all"
@@ -123,12 +127,12 @@ const cube444 = byId.get('444');
       </div>
     </div>
 
-    <!-- Selected PBs (3-column editorial strip, zero boxy cards) -->
+    <!-- Selected PBs (Symmetric 3-column editorial strip) -->
     <div
       id="wcaPanelHighlights"
       role="tabpanel"
       aria-labelledby="wcaTabHighlights"
-      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+      class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0"
     >
       {
         cube333 && (
@@ -145,7 +149,7 @@ const cube444 = byId.get('444');
 
       {
         cube222 && (
-          <div class="md:pr-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
+          <div class="md:px-6 rule-dotted-r-md pb-5 md:pb-0 rule-dotted-b-mobile space-y-1">
             <div class="flex items-baseline justify-between">
               <span class="font-mono text-xs uppercase tracking-wider text-[var(--fg-subtle)]">2×2×2 Cube</span>
               <span class="font-mono text-xs text-[var(--fg-subtle)] tabular-nums">{cube222.average} avg</span>
@@ -160,7 +164,7 @@ const cube444 = byId.get('444');
 
       {
         cube444 && (
-          <div class="space-y-1">
+          <div class="md:pl-6 space-y-1">
             <div class="flex items-baseline justify-between">
               <span class="font-mono text-xs uppercase tracking-wider text-[var(--fg-subtle)]">4×4×4 Cube</span>
               <span class="font-mono text-xs text-[var(--fg-subtle)] tabular-nums">{cube444.average} avg</span>
@@ -227,22 +231,39 @@ const cube444 = byId.get('444');
 </section>
 
 <script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>('.wca-tab');
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.wca-tab'));
   const panelHighlights = document.getElementById('wcaPanelHighlights');
   const panelAll = document.getElementById('wcaPanelAll');
 
-  tabs.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const target = btn.dataset.wcaTab;
-      tabs.forEach((b) => {
-        const active = b === btn;
-        b.setAttribute('aria-selected', active ? 'true' : 'false');
-        b.className = active
-          ? 'wca-tab py-2 min-h-[40px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer'
-          : 'wca-tab py-2 min-h-[40px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer';
-      });
-      panelHighlights?.classList.toggle('hidden', target !== 'highlights');
-      panelAll?.classList.toggle('hidden', target !== 'all');
+  function activateTab(btn: HTMLButtonElement, moveFocus = false) {
+    const target = btn.dataset.wcaTab;
+    tabs.forEach((b) => {
+      const active = b === btn;
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+      b.tabIndex = active ? 0 : -1;
+      b.className = active
+        ? 'wca-tab py-2 min-h-[40px] text-[var(--fg)] border-b-2 border-[var(--accent)] font-medium transition-colors cursor-pointer'
+        : 'wca-tab py-2 min-h-[40px] text-[var(--fg-subtle)] border-b-2 border-transparent hover:text-[var(--fg)] transition-colors cursor-pointer';
+    });
+    panelHighlights?.classList.toggle('hidden', target !== 'highlights');
+    panelAll?.classList.toggle('hidden', target !== 'all');
+    if (moveFocus) btn.focus();
+  }
+
+  tabs.forEach((btn, idx) => {
+    btn.addEventListener('click', () => activateTab(btn));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const next = (idx + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        activateTab(tabs[next], true);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        activateTab(tabs[0], true);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        activateTab(tabs[tabs.length - 1], true);
+      }
     });
   });
 </script>

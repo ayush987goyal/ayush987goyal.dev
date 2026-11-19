@@ -9,7 +9,6 @@ export interface FoundationItem {
   org: string;
   role: string;
   period: string;
-  location: string;
   summary: string;
 }
 
@@ -43,7 +42,9 @@ export interface UpstreamOssItem {
 export interface PublishedWritingItem {
   title: string;
   venue: string;
+  role: 'Co-authored' | 'Featured';
   date: string;
+  publishedAt: string;
   url: string;
   summary: string;
 }
@@ -66,10 +67,10 @@ export const PROFILE = {
     wca: 'https://www.worldcubeassociation.org/persons/2014GOYA01',
     awsMlBlog:
       'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
-    awsMcpPyPi: 'https://pypi.org/project/awslabs.aws-bedrock-data-automation-mcp-server/',
-    awsRekognitionMcpPyPi: 'https://pypi.org/project/awslabs.amazon-rekognition-mcp-server/',
     awsMcpPrs: 'https://github.com/awslabs/mcp/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
     awsCdkPrs: 'https://github.com/aws/aws-cdk/pulls?q=is%3Apr+author%3Aayush987goyal+is%3Amerged',
+    allExternalPrs:
+      'https://github.com/search?q=author%3Aayush987goyal+type%3Apr+is%3Amerged+-user%3Aayush987goyal&type=pullrequests',
   },
 } as const;
 
@@ -82,9 +83,9 @@ export const CURRENT_ROLE = {
 
 export const AMAZON_TENURE = {
   company: 'Amazon & AWS',
-  location: 'Bengaluru & Hyderabad',
-  period: 'Jun 2019 – Jul 2026 · 7 yrs',
-  progression: 'FEE II → Senior FEE → Senior SDE',
+  period: 'Jun 2019 – Jul 2026',
+  duration: '7 yrs · Bengaluru & Hyderabad',
+  progression: 'Frontend Engineer II → Senior FEE → Senior SDE',
   scope:
     'Delivered AI/ML platforms across Amazon Bedrock, Q Business, and Rekognition as cross-team technical lead across 10–25 engineers on concurrent launches, then expanded backend ownership at Amazon Pharmacy.',
   highlights: [
@@ -114,7 +115,7 @@ export const AMAZON_TENURE = {
       period: '2025 – 2026 · 2019 – 2021',
       metric: '2019 Amazon Star Performer',
       summary:
-        'Owned full-stack and backend architecture on customer-critical Amazon Pharmacy systems (Sep 2025 – Jul 2026). Earlier architected the V1 Vibe capacity-planning micro-frontend platform and pioneered org-wide AWS CDK adoption.',
+        'Owned full-stack and backend architecture on customer-critical Amazon Pharmacy systems. Earlier architected a V1 capacity-planning micro-frontend platform and pioneered org-wide AWS CDK adoption.',
     },
   ] satisfies CareerHighlight[],
 } as const;
@@ -124,7 +125,6 @@ export const EARLY_FOUNDATIONS: FoundationItem[] = [
     org: 'Goldman Sachs',
     role: 'Senior Developer Analyst',
     period: 'Nov 2018 – Jun 2019',
-    location: 'Bengaluru',
     summary:
       'Led a 3-engineer team on trade-compliance controls (React, Node.js, SQL), optimized market-making & agency order/quote flows, and delivered a global Market Access Rule impact study.',
   },
@@ -132,7 +132,6 @@ export const EARLY_FOUNDATIONS: FoundationItem[] = [
     org: 'Citibank',
     role: 'Core C++ & Full Stack Analyst',
     period: 'Jul 2016 – Sep 2018',
-    location: 'Pune',
     summary:
       'Reduced pricing latency in the equities engine, Dockerized WebSphere apps onto OpenShift CI/CD, and modernized analytics portals. Recipient of the 2017 Individual Excellence Award.',
   },
@@ -140,7 +139,6 @@ export const EARLY_FOUNDATIONS: FoundationItem[] = [
     org: 'IIT Roorkee',
     role: 'B.Tech. Chemical Engineering',
     period: '2012 – 2016',
-    location: 'Roorkee · Windsor · Pune',
     summary:
       '9.3/10 CGPA · Ranked 2nd in Class of 110. Excellence & B.S. Varshney Memorial Awards; gas-hydrate & CO₂ capture research at University of Windsor (Canada) and NCL Pune.',
   },
@@ -230,9 +228,9 @@ export const UPSTREAM_OSS: UpstreamOssItem[] = [
   },
   {
     repo: 'cdklabs & vuejs/core',
-    stats: '9 PRs · ★55k',
+    stats: '9 merged PRs',
     description:
-      'Authored CDK Aspects scope monitoring in cdk-monitoring-constructs (#34) and compiler/runtime optimizations in Vue 3 core.',
+      'Authored CDK Aspects scope monitoring in cdk-monitoring-constructs (#34) and compiler/runtime optimizations in Vue 3 core (★55k).',
     links: [
       {
         label: 'CDK',
@@ -250,7 +248,9 @@ export const PUBLISHED_WRITING: PublishedWritingItem[] = [
   {
     title: 'Whiteboard to cloud in minutes using Amazon Q, Amazon Bedrock Data Automation, and Model Context Protocol',
     venue: 'AWS Machine Learning Blog',
+    role: 'Co-authored',
     date: 'Aug 2025',
+    publishedAt: '2025-08-01',
     url: 'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
     summary:
       'Co-authored technical guide demonstrating how to pair Amazon Q Developer with the AWSLabs Bedrock Data Automation MCP server to turn whiteboard architecture sketches into deployed AWS infrastructure.',
@@ -258,7 +258,9 @@ export const PUBLISHED_WRITING: PublishedWritingItem[] = [
   {
     title: 'CDK Corner — February 2021 (Featured Contributor: aws/aws-cdk PR #12436)',
     venue: 'AWS DevOps Blog',
+    role: 'Featured',
     date: 'Feb 2021',
+    publishedAt: '2021-02-23',
     url: 'https://aws.amazon.com/blogs/devops/cdk-corner-february-2021/',
     summary:
       'Featured by the AWS CDK team for adding task-definition family and revision number support to StepFunctions EcsRunTask.',

@@ -13,38 +13,38 @@ const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
 
 <BaseLayout
   title={`Writing — ${PROFILE.name}`}
-  description={`Published articles and technical writing by ${PROFILE.name}.`}
+  description={`Official AWS publications and open-source features involving ${PROFILE.name}.`}
 >
   <SiteHeader active="writing" />
 
   <main id="main-content" class="flex-1 max-w-5xl w-full mx-auto px-5 sm:px-10 py-12 sm:py-16 space-y-12">
     <div class="max-w-3xl space-y-3 rule-dotted-b pb-6">
       <div class="font-mono text-xs uppercase tracking-[0.16em] text-[var(--accent)]">
-        Published &amp; Engineering Notes
+        Publications &amp; Features
       </div>
       <h1 class="font-editorial font-normal text-4xl sm:text-5xl tracking-[-0.025em] text-[var(--fg)]">
         Writing
       </h1>
       <p class="text-[15.5px] text-[var(--fg-muted)] leading-relaxed">
-        Official AWS blog publications and technical notes on full-stack architecture, cloud infrastructure, and AI developer tooling.
+        Official AWS blog publications and open-source features covering AI agent tooling, Model Context Protocol, and AWS CDK.
       </p>
     </div>
 
-    <!-- Official / External Publications -->
+    <!-- Official / External Publications & Features -->
     <section class="max-w-3xl space-y-4">
       <div class="font-mono text-xs uppercase tracking-[0.16em] text-[var(--fg-subtle)]">
-        Published Articles
+        Publications &amp; Features
       </div>
       <ul class="divide-y divide-dotted divide-[var(--border-dotted)] rule-dotted-t rule-dotted-b">
         {
           PUBLISHED_WRITING.map((item) => (
             <li class="py-6">
               <a href={item.url} target="_blank" rel="noopener" class="block group space-y-2">
-                <div class="flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs uppercase tracking-[0.14em]">
-                  <span class="text-[var(--accent)]">{item.venue}</span>
+                <div class="flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs uppercase tracking-[0.12em]">
+                  <span class="text-[var(--accent)]">{item.venue} · {item.role}</span>
                   <span class="text-[var(--fg-subtle)]">{item.date} · External ↗</span>
                 </div>
-                <h2 class="font-editorial font-normal text-2xl sm:text-[26px] leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                <h2 class="font-editorial font-normal text-2xl sm:text-[26px] leading-snug text-balance text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
                   {item.title}
                 </h2>
                 <p class="text-[14.5px] text-[var(--fg-muted)] leading-relaxed">{item.summary}</p>

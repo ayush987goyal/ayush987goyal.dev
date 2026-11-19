@@ -10,15 +10,20 @@ import { PROFILE } from '../data/profile';
 interface Props {
   title?: string;
   description?: string;
+  ogType?: 'website' | 'article';
 }
 
 const {
-  title = `${PROFILE.name} — Staff Software Engineer`,
+  title = `${PROFILE.name} — ${PROFILE.role}`,
   description = PROFILE.metaDescription,
+  ogType = 'website',
 } = Astro.props;
 
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const normalizedPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '');
+const canonicalUrl = new URL(normalizedPath, Astro.site);
 const ogImageUrl = new URL('/og.png', Astro.site);
+const avatarImageUrl = new URL('/avatar.jpg', Astro.site);
+const rssUrl = new URL('/rss.xml', Astro.site);
 const cfToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
 const personJsonLd = {
@@ -29,7 +34,7 @@ const personJsonLd = {
   worksFor: { '@type': 'Organization', name: 'Google' },
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Indian Institute of Technology, Roorkee' },
   url: `https://${PROFILE.domain}`,
-  image: ogImageUrl.toString(),
+  image: avatarImageUrl.toString(),
   sameAs: [PROFILE.links.github, PROFILE.links.linkedin, PROFILE.links.wca],
   address: {
     '@type': 'PostalAddress',
@@ -48,12 +53,13 @@ const personJsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title={`${PROFILE.name} — Writing`} href={rssUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#fdfaf5" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1b1917" media="(prefers-color-scheme: dark)" />
 
     <!-- Open Graph / Social -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
@@ -73,10 +79,16 @@ const personJsonLd = {
     <!-- Zero-FOUC theme initialization -->
     <script is:inline>
       (() => {
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (stored === 'dark' || (!stored && prefersDark)) {
-          document.documentElement.classList.add('dark');
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          }
         }
       })();
     </script>

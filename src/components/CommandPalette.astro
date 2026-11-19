@@ -94,20 +94,15 @@ import { PROFILE } from '../data/profile';
 
   const COMMANDS = [
     { label: 'Home', hint: '/', action: () => (window.location.href = '/') },
-    { label: 'Career Dispatch', hint: '#experience', action: () => goSection('#experience') },
-    { label: 'Open Source & Weekend Builds', hint: '#work', action: () => goSection('#work') },
-    { label: 'Speedcubing (WCA 2014GOYA01)', hint: '#cubing', action: () => goSection('#cubing') },
+    { label: 'Career Ledger', hint: '#experience', action: () => goSection('#experience') },
+    { label: 'Open Source & Builds', hint: '#work', action: () => goSection('#work') },
+    { label: `Speedcubing (WCA ${profile.wcaId})`, hint: '#cubing', action: () => goSection('#cubing') },
     { label: 'Writing & AWS Publications', hint: '/writing', action: () => (window.location.href = '/writing') },
     { label: 'Contact & Colophon', hint: '#contact', action: () => goSection('#contact') },
     {
       label: 'AWS ML Blog: Bedrock & MCP (2025)',
       hint: 'External ↗',
-      action: () =>
-        window.open(
-          'https://aws.amazon.com/blogs/machine-learning/whiteboard-to-cloud-in-minutes-using-amazon-q-amazon-bedrock-data-automation-and-model-context-protocol/',
-          '_blank',
-          'noopener'
-        ),
+      action: () => window.open(profile.links.awsMlBlog, '_blank', 'noopener'),
     },
     {
       label: `Copy Email (${profile.email})`,
@@ -121,7 +116,7 @@ import { PROFILE } from '../data/profile';
     },
     { label: 'GitHub (@ayush987goyal)', hint: 'External ↗', action: () => window.open(profile.links.github, '_blank', 'noopener') },
     { label: 'LinkedIn', hint: 'External ↗', action: () => window.open(profile.links.linkedin, '_blank', 'noopener') },
-    { label: 'WCA Profile (2014GOYA01)', hint: 'External ↗', action: () => window.open(profile.links.wca, '_blank', 'noopener') },
+    { label: `WCA Profile (${profile.wcaId})`, hint: 'External ↗', action: () => window.open(profile.links.wca, '_blank', 'noopener') },
   ];
 
   const modal = document.getElementById('cmdModal');
@@ -145,6 +140,7 @@ import { PROFILE } from '../data/profile';
     filtered.forEach((cmd, idx) => {
       const btn = document.createElement('button');
       btn.type = 'button';
+      btn.tabIndex = -1;
       btn.id = `cmd-opt-${idx}`;
       btn.setAttribute('role', 'option');
       const isActive = idx === activeIndex;
@@ -155,6 +151,12 @@ import { PROFILE } from '../data/profile';
           : 'text-[var(--fg-muted)] hover:bg-[var(--surface)] hover:text-[var(--fg)]'
       }`;
       btn.innerHTML = `<span class="font-medium">${cmd.label}</span><span class="font-mono text-xs text-[var(--fg-subtle)]">${cmd.hint}</span>`;
+      btn.addEventListener('pointerenter', () => {
+        if (activeIndex !== idx) {
+          activeIndex = idx;
+          render();
+        }
+      });
       btn.addEventListener('click', () => {
         close();
         cmd.action();
@@ -217,7 +219,7 @@ import { PROFILE } from '../data/profile';
       e.preventDefault();
       close();
     } else if (e.key === 'Tab') {
-      const focusables = modal.querySelectorAll('input, button');
+      const focusables = [input, closeBtn].filter(Boolean);
       if (focusables.length) {
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
@@ -237,7 +239,7 @@ import { PROFILE } from '../data/profile';
       e.preventDefault();
       activeIndex = (activeIndex - 1 + Math.max(filtered.length, 1)) % Math.max(filtered.length, 1);
       render();
-    } else if (e.key === 'Enter' && filtered[activeIndex]) {
+    } else if (e.key === 'Enter' && document.activeElement !== closeBtn && filtered[activeIndex]) {
       e.preventDefault();
       const cmd = filtered[activeIndex];
       close();
