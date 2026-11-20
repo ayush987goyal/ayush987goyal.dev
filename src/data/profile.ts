@@ -274,7 +274,7 @@ export const LIVE_APPS: WorkItem[] = [
     badge: 'Tabletop Companion',
     description:
       'Mobile-first end-game VP scorer handling TR, milestones, awards, greenery & city adjacency.',
-    url: 'https://terraforming-mars-score-calculator.vercel.app',
+    url: 'https://tfm-score.vercel.app',
     repoUrl: 'https://github.com/ayush987goyal/terraforming-mars-score-calculator',
     meta: 'TypeScript · Live App',
   },
