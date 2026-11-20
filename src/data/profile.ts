@@ -274,7 +274,7 @@ export const LIVE_APPS: WorkItem[] = [
     badge: 'Tabletop Companion',
     description:
       'Mobile-first end-game VP scorer handling TR, milestones, awards, greenery & city adjacency.',
-    url: 'https://terraforming-mars-score-calculator.vercel.app',
+    url: 'https://tfm-score.vercel.app',
     repoUrl: 'https://github.com/ayush987goyal/terraforming-mars-score-calculator',
     meta: 'TypeScript · Live App',
   },
@@ -283,7 +283,7 @@ export const LIVE_APPS: WorkItem[] = [
     category: 'app',
     badge: 'Party Game',
     description:
-      'Instant movie & Bollywood prompt generator with fast turn timers for game nights.',
+      'The whole game on one phone: play in teams or solo, draw a movie from Bollywood, Hollywood, South Indian or world cinema, and act it out against the clock.',
     url: 'https://playdumbcharades.vercel.app',
     repoUrl: 'https://github.com/ayush987goyal/dumb-charades-app',
     meta: 'TypeScript · Live App',
