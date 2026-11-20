@@ -48,7 +48,7 @@ export const WORK_CARDS: WorkCard[] = [
 ];
 
 export const PATH = [
-  { when: '2026 —', where: 'Google', what: 'Staff Software Engineer' },
+  { when: '2026 – now', where: 'Google', what: 'Staff Software Engineer' },
   { when: '2019 – 26', where: 'Amazon & AWS', what: 'FEE II → Senior SDE' },
   { when: '2016 – 19', where: 'Goldman Sachs · Citi', what: 'Trade compliance · C++ pricing' },
   { when: '2012 – 16', where: 'IIT Roorkee', what: 'Chemical Eng. · 2nd of 110' },

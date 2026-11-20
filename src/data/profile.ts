@@ -283,7 +283,7 @@ export const LIVE_APPS: WorkItem[] = [
     category: 'app',
     badge: 'Party Game',
     description:
-      'Instant movie & Bollywood prompt generator with fast turn timers for game nights.',
+      'The whole game on one phone: play in teams or solo, draw a movie from Bollywood, Hollywood, South Indian or world cinema, and act it out against the clock.',
     url: 'https://playdumbcharades.vercel.app',
     repoUrl: 'https://github.com/ayush987goyal/dumb-charades-app',
     meta: 'TypeScript · Live App',

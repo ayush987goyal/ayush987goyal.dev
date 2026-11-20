@@ -67,15 +67,15 @@ const pad = (h: number) => String(h).padStart(2, '0');
         <div class="stamp"><b>09:00</b> Bengaluru</div>
         <h1>One day with me.<br /><em>Work</em> until six, then everything else.</h1>
         <p class="lede">
-          I'm Ayush — a Staff Software Engineer at Google. After hours I'm a speedcuber with {medals.total} WCA medals, and
-          the friend who writes the scoring app for board-game night.
+          I'm Ayush, a Staff Software Engineer at Google. After hours I'm a speedcuber with {medals.total} WCA medals, and I
+          build the apps my friends and I play with on game night.
         </p>
         <div class="scrollhint">↓ scroll to move the sun</div>
       </section>
 
       <section data-h="10.5" id="work">
         <div class="stamp"><b>10:30</b> At work</div>
-        <h2>I build production AI — and the platforms other engineers build it on.</h2>
+        <h2>I build production AI and the platforms other engineers build it on.</h2>
         <p class="lede">Seven years at Amazon as a cross-team tech lead on Bedrock, Q Business and Rekognition. Now at Google.</p>
         <div class="grid2">
           {WORK_CARDS.map((c) => {
@@ -176,8 +176,8 @@ const pad = (h: number) => String(h).padStart(2, '0');
 
       <section data-h="22.5" id="builds">
         <div class="stamp"><b>22:30</b> Game night</div>
-        <h2>Friends over, a board game out — and I've usually written the scoring app.</h2>
-        <p class="lede">No logins, phone first, works on a bad connection.</p>
+        <h2>When friends come over, the phone on the table is usually running something I built.</h2>
+        <p class="lede">One game you play, two scorekeepers for games we already own. No logins, phone first.</p>
         <div class="apps">
           {LIVE_APPS.map((app) => (
             <a class="app" href={app.url} rel="noopener">
@@ -203,7 +203,7 @@ const pad = (h: number) => String(h).padStart(2, '0');
     </main>
     <footer class="foot">
       <span>© {new Date().getFullYear()} {PROFILE.name} · Bengaluru</span>
-      <span id="real">—</span>
+      <span id="real"></span>
     </footer>
   </div>
 </BaseLayout>
